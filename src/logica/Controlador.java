@@ -1,12 +1,7 @@
 
 package logica;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  *
@@ -198,5 +193,5 @@ public class Controlador {
         }
         return Sintaxis(/*tablas, */MiCadena);
     }
-   
+    
 }

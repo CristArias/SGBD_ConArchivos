@@ -6,7 +6,7 @@ package logica;
  * @author CristianAG
  */
 public class Contr {
-
+    
     Control control = new Control();
 // ****************** Determina qué operación se va a realizar *****************************
     public int esOperacion(String consulta)
@@ -38,6 +38,7 @@ public class Contr {
     
 // ============================================== Todos los métodos con CREATE TABLE =====================================
     //CREATE TABLE nombre_tabal ( columna_nombre1 tipodato NULL, columna_nombre1 tipodato NULL )
+    //CREATE TABLE actor ( act_id tipodato NULL, act_nombre tipodato NULL )
     
     
     public String nombreTablaCreate(String textodeconsulta)
@@ -585,7 +586,5 @@ public class Contr {
         }
         return SintaxisSELECT(/*tablas, */MiCadena);
     }
-    
-
     
 }

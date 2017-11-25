@@ -1,3 +1,4 @@
+
 package logica;
 
 import java.io.File;
@@ -123,5 +124,4 @@ public class Persistencia {
         } catch (IOException ex) {System.out.println(ex.getMessage() + "--leer--");}
         return tabla;
     }
-    
 }

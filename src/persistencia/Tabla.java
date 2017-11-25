@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package persistencia;
 
-import java.util.ArrayList;
+package persistencia;
 
 /**
  *
@@ -13,13 +7,7 @@ import java.util.ArrayList;
  */
 public class Tabla {
     
-    /*cedula = 9 bytes
-      nombres = 25 + 2 (inicio de String) = 27 bytes
-      apellidos = 25 + 2 (inicio de String) = 27 bytes
-      numero de cuenta = 25 + 2 (inicio de String) = 27 bytes
-      Total de cada registro = 89 bytes
-    */
-    public static final int tamanio = 89;
+     public static final int tamanio = 89;
     
     private String nomCol;
     private String tipoDato;
