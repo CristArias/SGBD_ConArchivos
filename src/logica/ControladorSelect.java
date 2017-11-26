@@ -322,7 +322,7 @@ public class ControladorSelect {
         Archivo arch = new Archivo();
         
         arch.abrirArchivo(path + sep + nombreTabla +".meta.txt", false);
-        while(arch.puedeLeer()){            
+        while(arch.puedeLeer()){
             String leer = arch.leerArchivo();        
             Tabla tabla = gson.fromJson(leer, Tabla.class);
             if (tabla.getNomCol().equalsIgnoreCase(nombreColumna)){
@@ -426,11 +426,11 @@ public class ControladorSelect {
     public ArrayList<Dato> consultaNormal(String consulta){
         String sep = System.getProperty("file.separator");
         String[] cadena = consulta.split(" ");       
-        String path = Archivo.obtenerRutaDirectorioTablaEspecifica(cadena[2]);        
+        String path = Archivo.obtenerRutaDirectorioTablaEspecifica(cadena[3]);        
         
         //obtener los datos de los archivos de la tabla
-        String metadatos = path + sep + cadena[2] +".meta.txt";
-        String datos = path + sep + cadena[2] +".datos.txt";                
+        String metadatos = path + sep + cadena[3] +".meta.txt";
+        String datos = path + sep + cadena[3] +".datos.txt";                
         List<Tabla> listaMetadatos = obtenerMetadatos(metadatos);
         List<Dato> listaDatos = obtenerDatos(datos);
         
@@ -449,7 +449,7 @@ public class ControladorSelect {
         ArrayList<Dato> resultado = new ArrayList<>();        
         //adicionar una cabecera para mostrar los datos 
         ArrayList<String> cabecera =  new ArrayList<>();
-        cabecera.addAll(Arrays.asList(campos));            
+        cabecera.addAll(Arrays.asList(columnas));            
         resultado.add(new Dato(cabecera));
         
         //dacionar los datos de la lista de datos a la lista de resultados
@@ -467,42 +467,48 @@ public class ControladorSelect {
     public ArrayList<Dato> consultaWhere(String consulta){
         String sep = System.getProperty("file.separator");
         String[] cadena = consulta.split(" ");       
-        String path = Archivo.obtenerRutaDirectorioTablaEspecifica(cadena[2]);        
+        String path = Archivo.obtenerRutaDirectorioTablaEspecifica(cadena[3]);        
         
         //obtener los datos de los archivos de la tabla
-        String metadatos = path + sep + cadena[2] +".meta.txt";
-        String datos = path + sep + cadena[2] +".datos.txt";                
+        String metadatos = path + sep + cadena[3] +".meta.txt";
+        String datos = path + sep + cadena[3] +".datos.txt";                
         List<Tabla> listaMetadatos = obtenerMetadatos(metadatos);
         List<Dato> listaDatos = obtenerDatos(datos);
         
         //obtener las columnas de la consulta
         String[] campos = consulta.split(" ");               
         String[] columnas = campos[1].split(",");            
-        List<Integer> posDatos = new ArrayList<>();
-        
-        //obtener el indice de las columnas que se desean consultar
-        posDatos.add(5);
+        List<Integer> posDatos = new ArrayList<>();                        
+                           
+        for (int i = 0; i < listaMetadatos.size(); i++) {
+            if(listaMetadatos.get(i).getNomCol().equals(campos[5]))
+                posDatos.add(i);
+        }
+       
+        //obtener el indice de las columnas que se desean consultar        
         for (String columna : columnas) {
             for (int i = 0; i < listaMetadatos.size(); i++) {
                 if(listaMetadatos.get(i).getNomCol().equals(columna)) 
-                    posDatos.add(i);
+                    posDatos.add(i);                                
             }                        
         }                        
         ArrayList<Dato> resultado = new ArrayList<>();        
         //adicionar una cabecera para mostrar los datos 
         ArrayList<String> cabecera =  new ArrayList<>();
-        cabecera.addAll(Arrays.asList(campos));            
+        cabecera.addAll(Arrays.asList(columnas));            
         resultado.add(new Dato(cabecera));
         
         //adicionar los datos de la lista de datos a la lista de resultados
+        boolean cond = false;
         for (Dato dato : listaDatos) {
             ArrayList<String> aux =  new ArrayList<>();
             for (int i = 1; i < posDatos.size(); i++) {
-                boolean cond = validacion(dato.getDatos().get(posDatos.get(0)), campos[6], campos[7]);
+                cond = validacion(dato.getDatos().get(posDatos.get(0)), campos[6], campos[7]);
                 if(cond)
                     aux.add(dato.getDatos().get(posDatos.get(i)));
-            }            
-            resultado.add(new Dato(aux));
+            }
+            if(!aux.isEmpty())
+                resultado.add(new Dato(aux));
         }                         
         return resultado;        
     }

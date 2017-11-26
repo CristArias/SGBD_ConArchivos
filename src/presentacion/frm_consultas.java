@@ -346,22 +346,23 @@ public class frm_consultas extends javax.swing.JFrame {
         String nom = controlSelect.nombreTablaSelect(consul);
         System.out.println(nom);
         
-
+        ArrayList<Dato> res ;
         if(errores.equals("NORMAL")){
             this.jtxt_errores.setText("Consulta exitosa.");
-            controlSelect.consultaNormal(consul);
+            res = controlSelect.consultaNormal(consul);
+            int i  = 4 ;
         }
         if(errores.equals("WHERE")){
             this.jtxt_errores.setText("Consulta exitosa.");
-            controlSelect.consultaNormal(consul);
+            controlSelect.consultaWhere(consul);
         }
         if(errores.equals("FULL_INNER_JOIN")){
             this.jtxt_errores.setText("Consulta exitosa.");
-            controlSelect.consultaNormal(consul);
+            controlSelect.consultaInnerJoin(consul);
         }
         if(errores.equals("FULL_INNER_JOIN_ORDER")){
             this.jtxt_errores.setText("Consulta exitosa.");
-            controlSelect.consultaNormal(consul);                     
+            controlSelect.consultaInnerJoinOrder(consul);                     
         }
         else this.jtxt_errores.setText(errores);
     }          
