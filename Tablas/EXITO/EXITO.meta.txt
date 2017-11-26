@@ -1,2 +1,0 @@
-{"nomCol":"INT","tipoDato":"INT","nulleable":"NULL"}
-{"nomCol":"INSDASDT","tipoDato":"INT","nulleable":"NULL)"}

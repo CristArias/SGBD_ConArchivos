@@ -1,6 +1,0 @@
-{"nomCol":"INT","tipoDato":"INT","nulleable":"NULL"}
-{"nomCol":"INT","tipoDato":"INT","nulleable":"NULL"}
-{"nomCol":"INASDT","tipoDato":"INT","nulleable":"NULL)"}
-{"nomCol":"INT","tipoDato":"INT","nulleable":"NULL"}
-{"nomCol":"INT","tipoDato":"INT","nulleable":"NULL"}
-{"nomCol":"INASDT","tipoDato":"INT","nulleable":"NULL)"}
