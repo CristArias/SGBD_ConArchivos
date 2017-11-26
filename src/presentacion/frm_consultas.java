@@ -337,22 +337,37 @@ public class frm_consultas extends javax.swing.JFrame {
         String cond = contr.condicionWhere(consul);
         System.out.println(cond);
     }
-
-    public void opcion4Select() {
-        String consul = this.txt_consulta.getText().toUpperCase();
+    
+    public void opcion4Select(){
         ControladorSelect controlSelect = new ControladorSelect();
-
-        String errores = controlSelect.ConsultaSELECTAValidar(consul);
+        String consul = controlSelect.darFormatoConsulta(this.txt_consulta.getText().toUpperCase());
+        
+        String errores = controlSelect.ConsultaSELECTAValidar(consul);  
         String nom = controlSelect.nombreTablaSelect(consul);
         System.out.println(nom);
+        
 
-        if (errores == null) {
+        if(errores.equals("NORMAL")){
             this.jtxt_errores.setText("Consulta exitosa.");
-        } else {
-            this.jtxt_errores.setText(errores);
+            controlSelect.consultaNormal(consul);
         }
-    }
-
+        if(errores.equals("WHERE")){
+            this.jtxt_errores.setText("Consulta exitosa.");
+            controlSelect.consultaNormal(consul);
+        }
+        if(errores.equals("FULL_INNER_JOIN")){
+            this.jtxt_errores.setText("Consulta exitosa.");
+            controlSelect.consultaNormal(consul);
+        }
+        if(errores.equals("FULL_INNER_JOIN_ORDER")){
+            this.jtxt_errores.setText("Consulta exitosa.");
+            controlSelect.consultaNormal(consul);                     
+        }
+        else this.jtxt_errores.setText(errores);
+    }          
+    
+    
+    
     /**
      * @param args the command line arguments
      */
