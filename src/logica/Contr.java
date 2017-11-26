@@ -176,12 +176,50 @@ public class Contr {
     
 // ********************************** columnas del insert ***********************************
     //insert into actor ( col1, col2, col2 ) values ( "nom", "ape", 1 )
+    
+    public String campsInsert(String textodeconsulta)
+    {
+        String MiCadena = "";
+        String Cad = "";
+        String cadenita2 = "";
+        
+        textodeconsulta = textodeconsulta.trim();//elimina espacios
+        
+        Cad = textodeconsulta.replaceAll(" +", " ");
+        
+        String[] MiCadena3 = Cad.split(" ");  
+        int con = 0;
+        int con2 = 0;
+        for (int i = MiCadena3.length-1; i > 0; i--) {
+//        for (int i = 0; i < MiCadena3.length; i++) {
+                       
+            if(MiCadena3[i].equalsIgnoreCase(")"))
+                continue;
+            if(MiCadena3[i].equalsIgnoreCase("("))
+                continue;
+            if(MiCadena3[i].equalsIgnoreCase("VALUES"))
+            {
+                con = i+1;
+                break;
+            }           
+            
+        } 
+        
+        for (int i = con; i < MiCadena3.length; i++) 
+        {
+            if(MiCadena3[i].equalsIgnoreCase(")"))
+                continue;
+            if(MiCadena3[i].equalsIgnoreCase("("))
+                continue;
+            cadenita2 = cadenita2 + MiCadena3[i];           
+        }    
+        
+        return cadenita2;
+    
+    }
+    
     public String columnasInsert(String textodeconsulta)
     {
-        
-        if(textodeconsulta.equalsIgnoreCase(""))
-            return  "EL CAMPO DE CONSULTA SE ENCUENTRA VACIO";
-        
         String MiCadena = "";
         
         textodeconsulta = textodeconsulta.trim();//elimina espacios
@@ -207,37 +245,9 @@ public class Contr {
                 break;
             
             cadenita = cadenita + " " + columna;
-        }
+        }        
         
-        String cadenaNueva = cadenita.replace(" ", "");
-        cadenita = cadenita.trim();
-        MiCadena=MiCadena.replace(cadenita, cadenaNueva);
-        
-        MiCadena2 = MiCadena.split(" ");
-        
-        String errores = "";
-        
-        if(MiCadena2.length > 1)
-        {
-            int cont = 0;
-            String var1 = MiCadena2[1];
-            for(int i = 0; i < var1.length(); i++ )
-            {
-                if(var1.charAt(i) == ',')
-                    cont = cont + 1;
-            }
-            String[] Columnas = MiCadena2[8].split(",");
-
-            for(int i = 0; i < Columnas.length; i++)
-            {
-                Columnas[i] = Columnas[i].trim();
-            }
-
-            if(Columnas.length < cont)
-                errores = errores + "¡La sentencia de las columnas se encuentra erronea!";                       
-        }
-        
-        return SintaxisInsert(MiCadena);
+        return cadenita;
     }
     
     public String SintaxisInsert(String consulta_usuario)

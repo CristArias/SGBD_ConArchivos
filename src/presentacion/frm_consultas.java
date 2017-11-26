@@ -2,8 +2,11 @@
 package presentacion;
 
 import static java.awt.SystemColor.control;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import logica.Contr;
 import logica.ControladorConex;
+import persistencia.Dato;
 import persistencia.Tabla;
 
 /**
@@ -239,13 +242,55 @@ public class frm_consultas extends javax.swing.JFrame {
                         String insertTab = contr.nombreTablaInsert(consul);
                         System.out.println(insertTab);
                         String nomTabIns = insertTab+".txt";
+                        String nomTabDato = insertTab+"Dato.txt";
                         if(conex.existeArch(nomTabIns))
+                        {
                             System.out.println("exite");
+                            String colTab = contr.columnasInsert(consul);
+                            String colIns = contr.campsInsert(consul);
+                            System.out.println(colTab);
+                            System.out.println(colIns);
+                            
+                            int tama = 0;
+                            //cmapos: nombre, tipo, nulleable. se hace por cada dato en el insert                           
+                            String[] cols = colIns.split(",");
+                            ArrayList<String> datos = new ArrayList<String>();
+                            String campo = "";
+                            
+                            while (tama < (cols.length)) {
+                                    System.out.println(cols[tama]);
+                                    datos.add(cols[tama]);                                    
+                                tama++;
+                                
+                            }  
+//                            datos.add(campo);
+                            System.out.println(datos + "datos");
+                            this.conex.guardarDato(new Dato(datos));
+                            this.conex.guardarColumnass(nomTabDato);
+                        }
                         else
                             System.out.println("No existe la tabla");
                         
-//                        String colIns = contr.columnasInsert(consul);
-//                        System.out.println(colIns);
+                        
+                        
+                        boolean esta = false;
+       
+                        for (Tabla tab : this.conex.getColumnas()) {
+//                            if (tab.getNomCol().equals(usuario)) {
+//                                esta = true;
+//                            }
+                        }
+
+                        if (esta) {
+//                            JOptionPane.showMessageDialog(this, "¡¡ La conexión ya está creada, intenta de nuevo !!", "Advetencia", JOptionPane.WARNING_MESSAGE);
+                            
+                        } else if (!esta) {
+//                            this.contrCon.guardarConexion(new DatosConexion(usuario, host, puerto, pass));
+//                            this.contrCon.guardarConexiones();
+                            //contr.crearUser(/*usuario, pass*/);
+//                            JOptionPane.showMessageDialog(this, "¡¡ Conexión creada con éxito !!", "Información Conexión", JOptionPane.INFORMATION_MESSAGE);
+                            
+                        }
                         break;
                         
                 case 3: //System.out.println("Aun no implementado Delete");
