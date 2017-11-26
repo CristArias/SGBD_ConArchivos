@@ -1,0 +1,2 @@
+{"nomCol":"VAR","tipoDato":"VARCHAR(3)","nulleable":"NULL"}
+{"nomCol":"INT","tipoDato":"INT","nulleable":"NULL"}

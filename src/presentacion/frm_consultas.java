@@ -1,9 +1,10 @@
 
 package presentacion;
 
-import static java.awt.SystemColor.control;
+import javax.swing.JOptionPane;
 import logica.Contr;
 import logica.ControladorConex;
+import logica.ControladorSelect;
 import persistencia.Tabla;
 
 /**
@@ -20,6 +21,8 @@ public class frm_consultas extends javax.swing.JFrame {
      */
     public frm_consultas() {
         initComponents();
+        setLocationRelativeTo(null);
+        setTitle("Sistema Gestor de Bases de Datos. Cristian Arias");
     }
 
     /**
@@ -187,90 +190,95 @@ public class frm_consultas extends javax.swing.JFrame {
         //metodo para saber si es SELECT, INSERT, DELETE o CREATE
         contr = new Contr();
         conex = new ControladorConex();
-        int realizar = contr.esOperacion(this.txt_consulta.getText());
-        String consul = this.txt_consulta.getText().toUpperCase();
-        //String errores = contr.ConsultaSELECTAValidar(this.txt_consulta.getText()); //Logger.getLogger(consultas.class.getName()).log(Level.SEVERE, null, ex);
-        
-        //System.out.println(consul);
-        String nomTabla;
+        int realizar = contr.esOperacion(this.txt_consulta.getText());        
+        //String errores = contr.ConsultaSELECTAValidar(this.txt_consulta.getText()); //Logger.getLogger(consultas.class.getName()).log(Level.SEVERE, null, ex);         
         switch (realizar) {                
-                case 1: //System.out.println("Aun no implementado Create");
-                        nomTabla = contr.nombreTablaCreate(consul);
-                        //System.out.println(nomTabla);                        
-                        conex.archivo(nomTabla);                        
-                        //control.insertarEnTabla("campo1", "varchar", "not null");                        
-                        String[] dats = contr.camposCreate(consul);                        
-                        String[] values;
-//                        System.out.println(dats[0]);
-//                        System.out.println(dats.length);
-                        int tam = 0;
-                        //campos: nombre, tipo, nulleable. se hace por cada dato en el insert
-                        String camp1 = "";
-                        String camp2 = "";
-                        String camp3 = "";
-                        
-                        while (tam < (dats.length)) {
-                            values = dats[tam].split(";");
-                            for (int i = 1; i < values.length; i++) {
-                                if(i == 1)
-                                {
-                                    camp1 = values[i];
-                                }
-                                if(i == 2)
-                                {
-                                    camp2 = values[i];
-                                }
-                                if(i == 3)
-                                {
-                                    camp3 = values[i];
-                                }                                
-                                //System.out.println(camp1+ " " + camp2 + " "+ camp3);
-                                //control.insertarEnTabla(values[1], values[2], values[3]);
-                            }
-//                              control.insertarEnTabla(camp1,camp2,camp3);
-                            
-                            this.conex.guardarColumna(new Tabla(camp1, camp2, camp3));                                                        
-                            tam++;
-                        }  
-                        this.conex.guardarColumnas(nomTabla);                        
-                        //System.out.println(campsCrea);
+                case 1: opcion1Create();
                         break;  
                         
-                case 2: //System.out.println("Aun no implementado Insert"); 
-                        String insertTab = contr.nombreTablaInsert(consul);
-                        System.out.println(insertTab);
-                        String nomTabIns = insertTab+".txt";
-                        if(conex.existeArch(nomTabIns))
-                            System.out.println("exite");
-                        else
-                            System.out.println("No existe la tabla");
-                        
-//                        String colIns = contr.columnasInsert(consul);
-//                        System.out.println(colIns);
+                case 2: opcion2Insert();
                         break;
                         
-                case 3: //System.out.println("Aun no implementado Delete");
-                        String deleteTab = contr.nombreTablaDelete(consul);
-                        System.out.println(deleteTab);
-                        
-                        String cond = contr.condicionWhere(consul);
-                        System.out.println(cond);
+                case 3: opcion3delete();
                         break;
-                case 4:                       
-                        String errores = contr.ConsultaSELECTAValidar(consul);  
-                        String nom = contr.nombreTablaSelect(consul);
-                        System.out.println(nom);
-                        
-                        if(errores != "")
-                            this.jtxt_errores.setText(errores);
-                        else        
-                            System.out.println("Sin errores");
+                
+                case 4: opcion4Select();
                         break;
                                         
                 default: System.out.println("No valida");
                         break;
             }
     }
+    
+    public void opcion1Create(){
+        String consul = this.txt_consulta.getText().toUpperCase();                
+        String nomTabla = contr.nombreTablaCreate(consul);
+        conex.archivo(nomTabla);                        
+        //control.insertarEnTabla("campo1", "varchar", "not null"); 
+        String[] dats = contr.camposCreate(consul);                        
+        String[] values;
+        int tam = 0;
+        //campos: nombre, tipo, nulleable. se hace por cada dato en el insert
+        String camp1 = "";
+        String camp2 = "";
+        String camp3 = "";
+
+        while (tam < (dats.length)) {
+            values = dats[tam].split(";");
+            for (int i = 1; i < values.length; i++) {
+                if(i == 1)
+                    camp1 = values[i];                
+                if(i == 2)
+                    camp2 = values[i];                
+                if(i == 3)
+                    camp3 = values[i];                                                     
+            }           
+            this.conex.guardarColumna(new Tabla(camp1, camp2, camp3));                                                        
+            tam++;
+        }                          
+        this.conex.guardarColumnas(nomTabla);        
+        JOptionPane.showMessageDialog(this, "La tabla " + nomTabla + ", fué creada satisfactoriamente", "Informe de creación", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    public void opcion2Insert(){
+        String consul = this.txt_consulta.getText().toUpperCase();        
+        String insertTab = contr.nombreTablaInsert(consul);
+        System.out.println(insertTab);
+        String nomTabIns = insertTab+".txt";
+        if(conex.existeArch(nomTabIns))
+            System.out.println("exite");
+        else
+            System.out.println("No existe la tabla");
+    }
+    
+    public void opcion3delete(){
+        String consul = this.txt_consulta.getText().toUpperCase();        
+        //System.out.println("Aun no implementado Delete");
+        String deleteTab = contr.nombreTablaDelete(consul);
+        System.out.println(deleteTab);
+
+        String cond = contr.condicionWhere(consul);
+        System.out.println(cond);
+    }
+    
+    public void opcion4Select(){
+        String consul = this.txt_consulta.getText().toUpperCase();        
+        ControladorSelect controlSelect = new ControladorSelect();
+        
+        String errores = controlSelect.ConsultaSELECTAValidar(consul);  
+        String nom = controlSelect.nombreTablaSelect(consul);
+        System.out.println(nom);
+
+        if(errores == null){
+            this.jtxt_errores.setText("Consulta exitosa.");
+        }else{
+            this.jtxt_errores.setText(errores);
+        }
+    }
+    
+    
+    
+    
     /**
      * @param args the command line arguments
      */

@@ -27,16 +27,19 @@ public class Archivo {
      * archivo para la escritura y falso para lectura
      * @throws IOException
      */
-    public void abrirArchivo(String nombre, boolean escritura)
-            throws IOException {
-        if (escritura == true) {
-            this.archivoEscritura = new BufferedWriter(new FileWriter(nombre, true));
-        } else {
-            File f = new File(nombre);
-            if (!f.exists()) {
-                f.createNewFile();
+    public void abrirArchivo(String nombre, boolean escritura) {
+        try{
+            if (escritura == true) {
+                this.archivoEscritura = new BufferedWriter(new FileWriter(nombre, true));
+            } else {
+                File f = new File(nombre);
+                if (!f.exists()) {
+                    f.createNewFile();
+                }
+                this.archivoLectura = new BufferedReader(new FileReader(nombre));
             }
-            this.archivoLectura = new BufferedReader(new FileReader(nombre));
+        }catch(IOException ex){
+            System.out.println("error abriendo el archivo. clase Archivo");
         }
     }
 
@@ -45,8 +48,13 @@ public class Archivo {
         archivoEscritura.newLine();
     }
 
-    public String leerArchivo() throws IOException {
-        return archivoLectura.readLine();
+    public String leerArchivo() {
+        try{
+            return archivoLectura.readLine();
+        }catch(IOException ex){
+            System.out.println("error al leer el archivo. clase leer archivo");
+        }
+        return "";
     }
 
     public void cerrarArchivo(){
@@ -62,35 +70,32 @@ public class Archivo {
         }
     }
 
-    public boolean puedeLeer() throws IOException {
-        return archivoLectura.ready();
+    public boolean puedeLeer() {
+        try{
+            return archivoLectura.ready();
+        }catch(IOException ex){
+            System.out.println("error en puedeLeer() de la clase Archivo. error: " + ex.getMessage());
+            return false;
+        }        
     }
 
     public String[] LeerPalabras(int cantidad) {
         String[] palabras = new String[cantidad];
-        int i = 0;
-        try {
-            while (this.puedeLeer() && i < cantidad) {
-                palabras[i] = this.leerArchivo();
-                i++;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        int i = 0;        
+        while (this.puedeLeer() && i < cantidad) {
+            palabras[i] = this.leerArchivo();
+            i++;
+        }        
         return palabras;
     }
 
     public String leerArchivo(int cantidad) {
         String datos = "";
-        int i = 0;
-        try {
-            while (this.puedeLeer() && i < cantidad) {
-                datos += this.leerArchivo();
-                i++;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        int i = 0;        
+        while (this.puedeLeer() && i < cantidad) {
+            datos += this.leerArchivo();
+            i++;
+        }        
         return datos;
     }
 

@@ -37,7 +37,7 @@ public class ControladorConex {
     private void jsonAList(String[] conexiones) {
         this.columnas.clear();
         for (String conexion : conexiones) {
-            Tabla conn = gson.fromJson(conexion, Tabla.class);
+            Tabla conn = gson.fromJson(conexion, Tabla.class);            
             this.columnas.add(conn);
         }
     }
@@ -78,16 +78,9 @@ public class ControladorConex {
         }finally{
             this.archivo.cerrarArchivo();
         }
-        //creando archivo de datos
-        try {
-            this.archivo.abrirArchivo(rutaTablas + sep + archCon + ".datos.txt", true);            
-            this.archivo.cerrarArchivo();
-        } catch (IOException ex) {
-            Logger.getLogger(ControladorConex.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("error creando archivo de datos");
-        }finally{
-            this.archivo.cerrarArchivo();
-        }       
+        //creando archivo de datos        
+        this.archivo.abrirArchivo(rutaTablas + sep + archCon + ".datos.txt", true);        
+        this.archivo.cerrarArchivo();
     } 
 
 //    Carga las conexiones que estan en el archio a una lista
