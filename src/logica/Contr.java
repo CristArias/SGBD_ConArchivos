@@ -1,11 +1,21 @@
 
 package logica;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import persistencia.Tabla;
+
 /**
  *
  * @author CristianAG
  */
 public class Contr {
+    
+    ControladorConex conex = new ControladorConex();
         
     /**
      * Determina qué operación se va a realizar (insert, delete, create, select)
@@ -94,27 +104,36 @@ public class Contr {
         MiCadena2 = cadenita.split(" ");
         
         String errores = "";
-        
+        System.out.println(MiCadena2.length+" tamaño");
         if(MiCadena2.length > 1)
         {
             int cont = 0;
-            String var1 = MiCadena2[1];
+            String var1 = MiCadena2[2];
             for(int i = 0; i < var1.length(); i++ )
             {
                 if(var1.charAt(i) == ',')
                     cont = cont + 1;
             }
-            String[] Columnas = MiCadena2[4].split(",");
-
-            for(int i = 0; i < Columnas.length; i++)
-            {
-                Columnas[i] = Columnas[i].trim();
+            
+                        
+            if(cont >= 1){
+                String[] Columnas = MiCadena2[4].split(",");
+                
+                for(int i = 0; i < Columnas.length; i++)
+                {
+                    Columnas[i] = Columnas[i].trim();
+                }
+                
+//                if(Columnas.length < cont){
+//                    errores = errores + "¡La sentencia de las columnas se encuentra erronea!";
+//                    System.out.println(errores);
+//                }
             }
+            
+            
+            
 
-            if(Columnas.length < cont){
-                errores = errores + "¡La sentencia de las columnas se encuentra erronea!";
-                System.out.println(errores);
-            }
+            
         }
         
         return SintaxisCreate(MiCadena);
@@ -122,6 +141,7 @@ public class Contr {
     
     public String[] SintaxisCreate(String consulta_usuario)
     {         
+        System.out.println(consulta_usuario+" consulta llega");
             String[] campos = consulta_usuario.split(" ");
             String[] columnas = null;
             for(int i = 0; i < campos.length; i++)
@@ -594,6 +614,78 @@ public class Contr {
             }
         }
         return SintaxisSELECT(/*tablas, */MiCadena);
+    }
+    
+    
+//============================================== validar campos =========================================
+    
+    public boolean TipoDato(String Table_name, String Column_name, String valorComparar)
+    {
+        boolean resultado = false;
+        String var = TipodeDColumna(Table_name, Column_name);
+        String descomponer = valorComparar;
+        String div[] = descomponer.split("/");
+        if(div.length <2 || div.length > 2)
+//if((valorComparar.charAt(0) == '\'')
+                
+        
+        if(!(valorComparar.charAt(0) == '\'')// && valorComparar.charAt(valorComparar.length()-1) == '\'') 
+                                && var.equalsIgnoreCase("varchar2" ))
+            resultado = false;
+        
+        if( var.equalsIgnoreCase("number" ) || var.equalsIgnoreCase("float"))
+        {
+            try
+            {
+                valorComparar = valorComparar.replace("'", "");
+                double n = Double.parseDouble(valorComparar);
+                return true;
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+        }
+        if(var.equalsIgnoreCase("date")&&
+                valorComparar.charAt(0)== '\'' 
+                && valorComparar.charAt(valorComparar.length()-1)== '\'')
+        {
+            try
+            {
+                valorComparar = valorComparar.replace("'", "");
+                String datoFecha = valorComparar.replace("-","/");
+                DateFormat formato = new SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH);
+                Date n = formato.parse(datoFecha);
+                return true;
+                
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+        }
+        
+        if(var.equalsIgnoreCase("varchar2") &&
+                valorComparar.charAt(0)== '\'' 
+                && valorComparar.charAt(valorComparar.length()-1)== '\'')
+            return true;
+        
+        return false;
+    }
+    
+    private String TipodeDColumna(String table_name, String column_name)
+    {
+        String tipoDato = "";
+        
+        for (Tabla tab : this.conex.getColumnas()) 
+        {
+//                            if (tab.getNomCol().equals(usuario)) {
+//                                esta = true;
+//                            }
+        }
+        
+        return tipoDato;
+        
     }
     
 }

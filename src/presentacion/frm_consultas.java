@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import logica.Contr;
 import logica.ControladorConex;
+import persistencia.Archivo;
 import persistencia.Dato;
 import persistencia.Tabla;
 
@@ -17,6 +18,7 @@ public class frm_consultas extends javax.swing.JFrame {
     
     Contr contr = new Contr();
     ControladorConex conex = new ControladorConex();
+    Archivo arc = new Archivo();
 
     /**
      * Creates new form frm_consultas
@@ -243,6 +245,10 @@ public class frm_consultas extends javax.swing.JFrame {
                         System.out.println(insertTab);
                         String nomTabIns = insertTab+".txt";
                         String nomTabDato = insertTab+"Dato.txt";
+                        
+                        //while()
+                        
+                        //Comprueba que esite la tabla para hacer el proceso de insersión
                         if(conex.existeArch(nomTabIns))
                         {
                             System.out.println("exite");
@@ -251,22 +257,43 @@ public class frm_consultas extends javax.swing.JFrame {
                             System.out.println(colTab);
                             System.out.println(colIns);
                             
+                            //Guarda los datos a insertar
                             int tama = 0;
                             //cmapos: nombre, tipo, nulleable. se hace por cada dato en el insert                           
-                            String[] cols = colIns.split(",");
+                            String[] colsIn = colIns.split(",");
                             ArrayList<String> datos = new ArrayList<String>();
-                            String campo = "";
                             
-                            while (tama < (cols.length)) {
-                                    System.out.println(cols[tama]);
-                                    datos.add(cols[tama]);                                    
+                            //Busca las columnas de las tablas
+                            //cmapos: nombre, tipo, nulleable. se hace por cada dato en el insert                           
+                            String[] colsCam = colTab.split(",");
+                            ArrayList<String> datosC = new ArrayList<String>();
+                            boolean valr = false;
+                            
+                            while (tama < (colsIn.length)) 
+                            {
+                                System.out.println(colsIn[tama]);
+                                datos.add(colsIn[tama]);  
+                                                               
+                                System.out.println(colsCam[tama]);
+                                valr = contr.TipoDato(nomTabIns, colsCam[tama], colsIn[tama]);
+                                if(valr)
+                                {
+                                    System.out.println("compatibles"); 
+                                }                                   
                                 tama++;
                                 
                             }  
+                            
+                            
+                            
+                              
+                            
 //                            datos.add(campo);
-                            System.out.println(datos + "datos");
-                            this.conex.guardarDato(new Dato(datos));
-                            this.conex.guardarColumnass(nomTabDato);
+                            System.out.println(datosC + "datos");
+//                            this.conex.guardarDato(new Dato(datos));
+//                            this.conex.guardarColumnass(nomTabDato);
+                            
+                            
                         }
                         else
                             System.out.println("No existe la tabla");
@@ -279,6 +306,7 @@ public class frm_consultas extends javax.swing.JFrame {
 //                            if (tab.getNomCol().equals(usuario)) {
 //                                esta = true;
 //                            }
+                            System.out.println("");
                         }
 
                         if (esta) {
@@ -291,6 +319,8 @@ public class frm_consultas extends javax.swing.JFrame {
 //                            JOptionPane.showMessageDialog(this, "¡¡ Conexión creada con éxito !!", "Información Conexión", JOptionPane.INFORMATION_MESSAGE);
                             
                         }
+                        
+                        //contr.TipoDato(nomTabIns, nomCmple, nomCmple);
                         break;
                         
                 case 3: //System.out.println("Aun no implementado Delete");

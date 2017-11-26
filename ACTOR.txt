@@ -1,2 +1,3 @@
 {"nomCol":"ACT_ID","tipoDato":"TIPODATO","nulleable":"NULL"}
 {"nomCol":"ACT_NOMBRE","tipoDato":"TIPODATO","nulleable":"NULL"}
+{"nomCol":"ACT_ID","tipoDato":"TIPODATO","nulleable":"NULL"}
