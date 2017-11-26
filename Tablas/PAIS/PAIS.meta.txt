@@ -1,0 +1,2 @@
+{"nomCol":"PAI_ID","tipoDato":"INT","nulleable":"NULL"}
+{"nomCol":"PAI_NOMBRE","tipoDato":"VARCHAR(10)","nulleable":"NULL"}
