@@ -3,8 +3,19 @@ package presentacion;
 
 import javax.swing.JOptionPane;
 import logica.Contr;
-import logica.ControladorConex;
+//import logica.ControladorConex;
 import logica.ControladorSelect;
+import com.google.gson.Gson;
+import static java.awt.SystemColor.control;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import logica.Contr;
+import logica.ControladorConex;
+import persistencia.Archivo;
+import persistencia.Dato;
 import persistencia.Tabla;
 
 /**
@@ -15,6 +26,8 @@ public class frm_consultas extends javax.swing.JFrame {
     
     Contr contr = new Contr();
     ControladorConex conex = new ControladorConex();
+    Archivo arc = new Archivo();
+    private Gson gson;
 
     /**
      * Creates new form frm_consultas
@@ -182,10 +195,14 @@ public class frm_consultas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_consultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_consultarActionPerformed
-        consultar();
+        try {
+            consultar();
+        } catch (IOException ex) {
+            Logger.getLogger(frm_consultas.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btn_consultarActionPerformed
 
-    public void consultar(){
+    public void consultar() throws IOException{
         //ResultSet tablas = contr.ObtenerDatosTablasUsuario();
         //metodo para saber si es SELECT, INSERT, DELETE o CREATE
         contr = new Contr();
@@ -241,14 +258,93 @@ public class frm_consultas extends javax.swing.JFrame {
     }
     
     public void opcion2Insert(){
-        String consul = this.txt_consulta.getText().toUpperCase();        
+        String consul = this.txt_consulta.getText().toUpperCase();
         String insertTab = contr.nombreTablaInsert(consul);
-        System.out.println(insertTab);
-        String nomTabIns = insertTab+".txt";
-        if(conex.existeArch(nomTabIns))
-            System.out.println("exite");
-        else
-            System.out.println("No existe la tabla");
+                        System.out.println(insertTab);
+                        String nomTabIns = insertTab+".txt";
+                        String nomTabDato = insertTab+"Dato.txt";
+                        arc.abrirArchivo(nomTabIns, false);
+                        while(arc.puedeLeer())
+                        {
+                            String linea = arc.leerArchivo();
+                            Tabla tab = gson.fromJson(linea, Tabla.class);
+                            System.out.println(tab.toString());                           
+                        }
+                        arc.cerrarArchivo();
+                        
+                        //Comprueba que esite la tabla para hacer el proceso de insersión
+//                        if(conex.existeArch(nomTabIns))
+//                        {
+//                            System.out.println("exite");
+//                            String colTab = contr.columnasInsert(consul);
+//                            String colIns = contr.campsInsert(consul);
+//                            System.out.println(colTab);
+//                            System.out.println(colIns);
+//                            
+//                            //Guarda los datos a insertar
+//                            int tama = 0;
+//                            //cmapos: nombre, tipo, nulleable. se hace por cada dato en el insert                           
+//                            String[] colsIn = colIns.split(",");
+//                            ArrayList<String> datos = new ArrayList<String>();
+//                            
+//                            //Busca las columnas de las tablas
+//                            //cmapos: nombre, tipo, nulleable. se hace por cada dato en el insert                           
+//                            String[] colsCam = colTab.split(",");
+//                            ArrayList<String> datosC = new ArrayList<String>();
+//                            boolean valr = false;
+//                            
+//                            while (tama < (colsIn.length)) 
+//                            {
+//                                System.out.println(colsIn[tama]);
+//                                datos.add(colsIn[tama]);  
+//                                                               
+//                                System.out.println(colsCam[tama]);
+////                                valr = contr.TipoDato(nomTabIns, colsCam[tama], colsIn[tama]);
+////                                if(valr)
+////                                {
+////                                    System.out.println("compatibles"); 
+////                                }                                   
+//                                tama++;
+//                                
+//                            }  
+//                            
+//                            
+//                            
+//                              
+//                            
+////                            datos.add(campo);
+//                            System.out.println(datosC + "datos");
+////                            this.conex.guardarDato(new Dato(datos));
+////                            this.conex.guardarColumnass(nomTabDato);
+//                            
+//                            
+//                        }
+//                        else
+//                            System.out.println("No existe la tabla");
+                        
+                        
+                        
+                        boolean esta = false;
+       
+//                        for (Tabla tab : this.conex.getColumnas()) {
+////                            if (tab.getNomCol().equals(usuario)) {
+////                                esta = true;
+////                            }
+//                            System.out.println("");
+//                        }
+
+                        if (esta) {
+//                            JOptionPane.showMessageDialog(this, "¡¡ La conexión ya está creada, intenta de nuevo !!", "Advetencia", JOptionPane.WARNING_MESSAGE);
+                            
+                        } else if (!esta) {
+//                            this.contrCon.guardarConexion(new DatosConexion(usuario, host, puerto, pass));
+//                            this.contrCon.guardarConexiones();
+                            //contr.crearUser(/*usuario, pass*/);
+//                            JOptionPane.showMessageDialog(this, "¡¡ Conexión creada con éxito !!", "Información Conexión", JOptionPane.INFORMATION_MESSAGE);
+                            
+                        }
+                        
+                        //contr.TipoDato(nomTabIns, nomCmple, nomCmple);
     }
     
     public void opcion3delete(){

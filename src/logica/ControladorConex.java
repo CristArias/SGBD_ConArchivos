@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import persistencia.Archivo;
+import persistencia.Dato;
 import persistencia.Tabla;
 
 /**
@@ -22,6 +23,7 @@ public class ControladorConex {
     private List<Tabla> columnas;
     private Gson gson;
     private Archivo archivo;
+    private List<Dato> datos;
     
     //public String archCon = "datosConexion.txt";
     
@@ -29,6 +31,7 @@ public class ControladorConex {
 
     public ControladorConex() {
         this.columnas = new ArrayList<>();
+        this.datos = new ArrayList<>();
         this.gson = new Gson();
         this.archivo = new Archivo();
     }
@@ -39,6 +42,14 @@ public class ControladorConex {
         for (String conexion : conexiones) {
             Tabla conn = gson.fromJson(conexion, Tabla.class);            
             this.columnas.add(conn);
+        }
+    }
+    
+    private void jsonAListt(String[] conexiones) {
+        this.datos.clear();
+        for (String conexion : conexiones) {
+            Dato conn = gson.fromJson(conexion, Dato.class);
+            this.datos.add(conn);
         }
     }
 
@@ -53,6 +64,18 @@ public class ControladorConex {
         }
 //        return this.gson.toJson(this.conexiones);
         return datos;
+    }
+    
+    private String[] listAJsonn() {
+        String[] datoss = new String[this.datos.size()];
+        int i = 0;
+        for (Dato conexion : this.datos) {
+
+            datoss[i] = this.gson.toJson(conexion);
+            i++;
+        }
+//        return this.gson.toJson(this.conexiones);
+        return datoss;
     }
 
 //    guarda las conexiones de la lista al archivo
@@ -81,7 +104,20 @@ public class ControladorConex {
         //creando archivo de datos        
         this.archivo.abrirArchivo(rutaTablas + sep + archCon + ".datos.txt", true);        
         this.archivo.cerrarArchivo();
-    } 
+    }         
+    
+    public void guardarColumnass(String archCon) {
+        this.eliminarArchivo(archCon);
+        try {
+            this.archivo.abrirArchivo(archCon, true);
+            for (String dato : this.listAJsonn()) {
+                this.archivo.escribirArchivo(dato);
+            }
+            this.archivo.cerrarArchivo();
+        } catch (IOException ex) {
+            Logger.getLogger(ControladorConex.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
 //    Carga las conexiones que estan en el archio a una lista
     public void cargarColumnas(String archCon) {
@@ -98,19 +134,46 @@ public class ControladorConex {
             Logger.getLogger(ControladorConex.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void cargarColumnass(String archCon) {
+        try {
+            if (this.archivo.existeArchivo(archCon)) {
+                int cantidadLineas = this.archivo.contarLineas(archCon);
+                this.archivo.abrirArchivo(archCon, false);
+                jsonAListt(this.archivo.LeerPalabras(cantidadLineas));
+                this.archivo.cerrarArchivo();
+            } else {
+                guardarColumnass(archCon);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ControladorConex.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
 //    Guarda una columnas en la lista
         public void guardarColumna(Tabla columnas) {
         this.columnas.add(columnas);
     }
     
+    public void guardarDato(Dato datos) {
+        this.datos.add(datos);
+    }
+    
 //    Obtiene la lista de conexiones
     public List<Tabla> getColumnas() {
         return columnas;
     }
+    
+    public List<Dato> getColumnass() {
+        return datos;
+    }
 
     public void setColumnas(List<Tabla> column) {
         this.columnas = column;
+    }
+    
+    public void setColumnass(List<Dato> dat) {
+        this.datos = dat;
     }
 
 
@@ -131,7 +194,6 @@ public class ControladorConex {
     public void archivo(String nom)
     {
         per.establecerArchivo(nom);
-    }
-    
+    }   
     
 }
