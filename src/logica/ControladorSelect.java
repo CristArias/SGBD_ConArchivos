@@ -429,8 +429,8 @@ public class ControladorSelect {
         String path = Archivo.obtenerRutaDirectorioTablaEspecifica(cadena[2]);        
         
         //obtener los datos de los archivos de la tabla
-        String datos = path + sep + cadena[2] +".meta.txt";
-        String metadatos = path + sep + cadena[2] +".datos.txt";                
+        String metadatos = path + sep + cadena[2] +".meta.txt";
+        String datos = path + sep + cadena[2] +".datos.txt";                
         List<Tabla> listaMetadatos = obtenerMetadatos(metadatos);
         List<Dato> listaDatos = obtenerDatos(datos);
         
@@ -464,8 +464,79 @@ public class ControladorSelect {
         return resultado;
     }
     
-    public void consultaWhere(String consulta){
+    public ArrayList<Dato> consultaWhere(String consulta){
+        String sep = System.getProperty("file.separator");
+        String[] cadena = consulta.split(" ");       
+        String path = Archivo.obtenerRutaDirectorioTablaEspecifica(cadena[2]);        
         
+        //obtener los datos de los archivos de la tabla
+        String metadatos = path + sep + cadena[2] +".meta.txt";
+        String datos = path + sep + cadena[2] +".datos.txt";                
+        List<Tabla> listaMetadatos = obtenerMetadatos(metadatos);
+        List<Dato> listaDatos = obtenerDatos(datos);
+        
+        //obtener las columnas de la consulta
+        String[] campos = consulta.split(" ");               
+        String[] columnas = campos[1].split(",");            
+        List<Integer> posDatos = new ArrayList<>();
+        
+        //obtener el indice de las columnas que se desean consultar
+        posDatos.add(5);
+        for (String columna : columnas) {
+            for (int i = 0; i < listaMetadatos.size(); i++) {
+                if(listaMetadatos.get(i).getNomCol().equals(columna)) 
+                    posDatos.add(i);
+            }                        
+        }                        
+        ArrayList<Dato> resultado = new ArrayList<>();        
+        //adicionar una cabecera para mostrar los datos 
+        ArrayList<String> cabecera =  new ArrayList<>();
+        cabecera.addAll(Arrays.asList(campos));            
+        resultado.add(new Dato(cabecera));
+        
+        //adicionar los datos de la lista de datos a la lista de resultados
+        for (Dato dato : listaDatos) {
+            ArrayList<String> aux =  new ArrayList<>();
+            for (int i = 1; i < posDatos.size(); i++) {
+                boolean cond = validacion(dato.getDatos().get(posDatos.get(0)), campos[6], campos[7]);
+                if(cond)
+                    aux.add(dato.getDatos().get(posDatos.get(i)));
+            }            
+            resultado.add(new Dato(aux));
+        }                         
+        return resultado;        
+    }
+    
+    /**
+     * validar la condicion del where de la cansulta
+     * @param columna valor de la columna
+     * @param condicion expresion booleana
+     * @param valor valor a evaluar
+     * @return 
+     */
+    private boolean validacion(String columna, String condicion, String valor) {        
+        boolean cond = false;
+        switch(condicion){
+            case ">":
+                cond = columna.compareTo(valor) > 0;
+                break;
+            case ">=":
+                cond = columna.compareTo(valor) >= 0;
+                break;
+            case "=":
+                cond = columna.equals(valor);
+                break;
+            case "<":
+                cond = columna.compareTo(valor) < 0;;            
+                break;
+            case "<=":
+                cond = columna.compareTo(valor) >= 0;;
+                break;
+            case "<>":
+                cond = !columna.equals(valor);
+                break;                
+        }
+        return cond;                
     }
     
     public void consultaInnerJoin(String consulta){
@@ -548,5 +619,7 @@ public class ControladorSelect {
         
         return MiCadena;
     }
+
+    
     
 }

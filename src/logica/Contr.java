@@ -1,12 +1,15 @@
 
 package logica;
 
+import com.google.gson.Gson;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import persistencia.Archivo;
 import persistencia.Tabla;
 
 /**
@@ -426,74 +429,92 @@ public class Contr {
     
 //============================================== validar campos =========================================
     
-    public boolean TipoDato(String Table_name, String Column_name, String valorComparar)
-    {
-        boolean resultado = false;
-        String var = TipodeDColumna(Table_name, Column_name);
-        String descomponer = valorComparar;
-        String div[] = descomponer.split("/");
-        if(div.length <2 || div.length > 2)
-//if((valorComparar.charAt(0) == '\'')
-                
-        
-        if(!(valorComparar.charAt(0) == '\'')// && valorComparar.charAt(valorComparar.length()-1) == '\'') 
-                                && var.equalsIgnoreCase("varchar2" ))
-            resultado = false;
-        
-        if( var.equalsIgnoreCase("number" ) || var.equalsIgnoreCase("float"))
-        {
-            try
-            {
-                valorComparar = valorComparar.replace("'", "");
-                double n = Double.parseDouble(valorComparar);
-                return true;
-            }
-            catch(Exception e)
-            {
-                return false;
-            }
-        }
-        if(var.equalsIgnoreCase("date")&&
-                valorComparar.charAt(0)== '\'' 
-                && valorComparar.charAt(valorComparar.length()-1)== '\'')
-        {
-            try
-            {
-                valorComparar = valorComparar.replace("'", "");
-                String datoFecha = valorComparar.replace("-","/");
-                DateFormat formato = new SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH);
-                Date n = formato.parse(datoFecha);
-                return true;
-                
-            }
-            catch(Exception e)
-            {
-                return false;
+    private Gson gson = new Gson();
+    /**
+     * validar si un valor ingresado corresponde al valor que desea comparar
+     * @param nombreTabla nombre de la tabla
+     * @param nombreColumna nombre de la columna
+     * @param valor valor que se desea evaluar
+     * @return TRUE si la cadena valor es valida, FALSE de lo contrario
+     */
+    public int validarCampoComparacion(String nombreTabla, String nombreColumna, String valor) {
+        String sep = System.getProperty("file.separator");
+        String path = Archivo.obtenerRutaDirectorioTablaEspecifica(nombreTabla);        
+        Archivo arch = new Archivo();
+        Tabla tabla = new Tabla();
+        arch.abrirArchivo(path + sep + nombreTabla +".meta.txt", false);
+        while(arch.puedeLeer()){            
+            String leer = arch.leerArchivo();        
+            tabla = gson.fromJson(leer, Tabla.class);
+            if (tabla.getNomCol().trim().equalsIgnoreCase(nombreColumna.trim())){
+                break;
             }
         }
         
-        if(var.equalsIgnoreCase("varchar2") &&
-                valorComparar.charAt(0)== '\'' 
-                && valorComparar.charAt(valorComparar.length()-1)== '\'')
-            return true;
-        
-        return false;
+        return validarTipoDato(tabla.getTipoDato(), valor);        
+    }
+
+    /**
+     * validar que un string tenga el mismo tipo de dato de la columna que se 
+     * desea evaluar.
+     * @param tipoDato tipo de dato de la columna.
+     * @param valor valor que se desea evaluar.
+     * @return TRUE si el valor ingresado es correcto, FALSE de lo contrario.
+     */
+    public int validarTipoDato(String tipoDato, String valor) {
+        if(tipoDato.contains("VARCHAR")){
+            String[] num = tipoDato.split("\\(");
+            String[] limites = num[1].split("\\)");
+            //se suma dos ya que debe tener en cuenta las comillas
+            int limite = Integer.parseInt(limites[0]) + 2;
+            if(valor.charAt(0) != '\''){
+                return -1;
+            }
+            if(valor.charAt(valor.length()-1) != '\''){
+                return -1;
+            }            
+            if(valor.length() < limite) 
+                return 1;
+            else 
+                return 0;                       
+        }
+        if(tipoDato.equalsIgnoreCase("INT")){
+            try{
+                Integer.parseInt(valor);
+                return 1;
+            }catch(NumberFormatException nfe){
+                return 0;
+            }
+        }
+        if(tipoDato.equalsIgnoreCase("FLOAT")){
+            try{
+                Float.parseFloat(valor);
+                return 1;
+            }catch(NumberFormatException nfe){
+                return 0;
+            }
+        }
+        if(tipoDato.equalsIgnoreCase("DATE")){
+            return validarFecha(valor);
+        }
+        return 0;
     }
     
-    private String TipodeDColumna(String table_name, String column_name)
-    {
-        String tipoDato = "";
-        
-        for (Tabla tab : this.conex.getColumnas()) 
-        {
-//                            if (tab.getNomCol().equals(usuario)) {
-//                                esta = true;
-//                            }
+    /**
+     * permite ver si una cadena tiene el formato correcto de fecha
+     * @param fecha cadena que se desea evaluar
+     * @return TRUE cuando la fecha es valida, FALSE de lo contrario
+     */
+    public int validarFecha(String fecha) {
+        try {
+            SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+            formatoFecha.setLenient(false);
+            formatoFecha.parse(fecha);
+        } catch (ParseException e) {
+            return 0;
         }
-        
-        return tipoDato;
-        
-    }
+        return 1;
+    }    
     
 }
 

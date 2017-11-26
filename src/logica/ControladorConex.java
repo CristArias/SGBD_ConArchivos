@@ -107,15 +107,20 @@ public class ControladorConex {
     }         
     
     public void guardarColumnass(String archCon) {
-        this.eliminarArchivo(archCon);
+        
+        String sep = System.getProperty("file.separator");
+        String rutaTablas = Archivo.obtenerRutaDirectorioTablaEspecifica(archCon);
         try {
-            this.archivo.abrirArchivo(archCon, true);
-            for (String dato : this.listAJsonn()) {
+            this.archivo.abrirArchivo(rutaTablas + sep + archCon + ".datos.txt", true);
+            String[] json = this.listAJsonn();
+            for (String dato : json) {
                 this.archivo.escribirArchivo(dato);
             }
-            this.archivo.cerrarArchivo();
         } catch (IOException ex) {
+            System.out.println("error creando archivo de metadatos");
             Logger.getLogger(ControladorConex.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            this.archivo.cerrarArchivo();
         }
     }
 

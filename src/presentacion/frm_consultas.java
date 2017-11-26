@@ -1,4 +1,3 @@
-
 package presentacion;
 
 import javax.swing.JOptionPane;
@@ -23,7 +22,7 @@ import persistencia.Tabla;
  * @author CristianAG
  */
 public class frm_consultas extends javax.swing.JFrame {
-    
+
     Contr contr = new Contr();
     ControladorConex conex = new ControladorConex();
     Archivo arc = new Archivo();
@@ -202,37 +201,43 @@ public class frm_consultas extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_consultarActionPerformed
 
-    public void consultar() throws IOException{
+    public void consultar() throws IOException {
         //ResultSet tablas = contr.ObtenerDatosTablasUsuario();
         //metodo para saber si es SELECT, INSERT, DELETE o CREATE
         contr = new Contr();
         conex = new ControladorConex();
-        int realizar = contr.esOperacion(this.txt_consulta.getText());        
+        int realizar = contr.esOperacion(this.txt_consulta.getText());
         //String errores = contr.ConsultaSELECTAValidar(this.txt_consulta.getText()); //Logger.getLogger(consultas.class.getName()).log(Level.SEVERE, null, ex);         
-        switch (realizar) {                
-                case 1: opcion1Create();
-                        break;  
-                        
-                case 2: opcion2Insert();
-                        break;
-                        
-                case 3: opcion3delete();
-                        break;
-                
-                case 4: opcion4Select();
-                        break;
-                                        
-                default: System.out.println("No valida");
-                        break;
-            }
+        switch (realizar) {
+            case 1:
+                opcion1Create();
+                break;
+
+            case 2:
+                opcion2Insert();
+                break;
+
+            case 3:
+                opcion3delete();
+                break;
+
+            case 4:
+                opcion4Select();
+                break;
+
+            default:
+                System.out.println("No valida");
+                break;
+        }
     }
-    
-    public void opcion1Create(){
-        String consul = this.txt_consulta.getText().toUpperCase();                
+
+    public void opcion1Create() {
+        //CREATE TABLE pais ( pai_id int NULL, pai_nombre varchar(10) NULL )
+        String consul = this.txt_consulta.getText().toUpperCase();
         String nomTabla = contr.nombreTablaCreate(consul);
-        conex.archivo(nomTabla);                        
+        conex.archivo(nomTabla);
         //control.insertarEnTabla("campo1", "varchar", "not null"); 
-        String[] dats = contr.camposCreate(consul);                        
+        String[] dats = contr.camposCreate(consul);
         String[] values;
         int tam = 0;
         //campos: nombre, tipo, nulleable. se hace por cada dato en el insert
@@ -243,112 +248,87 @@ public class frm_consultas extends javax.swing.JFrame {
         while (tam < (dats.length)) {
             values = dats[tam].split(";");
             for (int i = 1; i < values.length; i++) {
-                if(i == 1)
-                    camp1 = values[i];                
-                if(i == 2)
-                    camp2 = values[i];                
-                if(i == 3)
-                    camp3 = values[i];                                                     
-            }           
-            this.conex.guardarColumna(new Tabla(camp1, camp2, camp3));                                                        
+                if (i == 1) {
+                    camp1 = values[i];
+                }
+                if (i == 2) {
+                    camp2 = values[i];
+                }
+                if (i == 3) {
+                    camp3 = values[i];
+                }
+            }
+            this.conex.guardarColumna(new Tabla(camp1, camp2, camp3));
             tam++;
-        }                          
-        this.conex.guardarColumnas(nomTabla);        
+        }
+        this.conex.guardarColumnas(nomTabla);
         JOptionPane.showMessageDialog(this, "La tabla " + nomTabla + ", fué creada satisfactoriamente", "Informe de creación", JOptionPane.INFORMATION_MESSAGE);
     }
-    
-    public void opcion2Insert(){
+
+    //insert into PAIS ( PAI_ID, PAI_NOMBRE ) values ( 1, 'HOLA' )
+    public void opcion2Insert() {
         String consul = this.txt_consulta.getText().toUpperCase();
         String insertTab = contr.nombreTablaInsert(consul);
-                        System.out.println(insertTab);
-                        String nomTabIns = insertTab+".txt";
-                        String nomTabDato = insertTab+"Dato.txt";
-                        arc.abrirArchivo(nomTabIns, false);
-                        while(arc.puedeLeer())
-                        {
-                            String linea = arc.leerArchivo();
-                            Tabla tab = gson.fromJson(linea, Tabla.class);
-                            System.out.println(tab.toString());                           
-                        }
-                        arc.cerrarArchivo();
-                        
-                        //Comprueba que esite la tabla para hacer el proceso de insersión
-//                        if(conex.existeArch(nomTabIns))
-//                        {
-//                            System.out.println("exite");
-//                            String colTab = contr.columnasInsert(consul);
-//                            String colIns = contr.campsInsert(consul);
-//                            System.out.println(colTab);
-//                            System.out.println(colIns);
-//                            
-//                            //Guarda los datos a insertar
-//                            int tama = 0;
-//                            //cmapos: nombre, tipo, nulleable. se hace por cada dato en el insert                           
-//                            String[] colsIn = colIns.split(",");
-//                            ArrayList<String> datos = new ArrayList<String>();
-//                            
-//                            //Busca las columnas de las tablas
-//                            //cmapos: nombre, tipo, nulleable. se hace por cada dato en el insert                           
-//                            String[] colsCam = colTab.split(",");
-//                            ArrayList<String> datosC = new ArrayList<String>();
-//                            boolean valr = false;
-//                            
-//                            while (tama < (colsIn.length)) 
-//                            {
-//                                System.out.println(colsIn[tama]);
-//                                datos.add(colsIn[tama]);  
-//                                                               
-//                                System.out.println(colsCam[tama]);
-////                                valr = contr.TipoDato(nomTabIns, colsCam[tama], colsIn[tama]);
-////                                if(valr)
-////                                {
-////                                    System.out.println("compatibles"); 
-////                                }                                   
-//                                tama++;
-//                                
-//                            }  
-//                            
-//                            
-//                            
-//                              
-//                            
-////                            datos.add(campo);
-//                            System.out.println(datosC + "datos");
-////                            this.conex.guardarDato(new Dato(datos));
-////                            this.conex.guardarColumnass(nomTabDato);
-//                            
-//                            
-//                        }
-//                        else
-//                            System.out.println("No existe la tabla");
-                        
-                        
-                        
-                        boolean esta = false;
-       
-//                        for (Tabla tab : this.conex.getColumnas()) {
-////                            if (tab.getNomCol().equals(usuario)) {
-////                                esta = true;
-////                            }
-//                            System.out.println("");
-//                        }
+        System.out.println(insertTab);
+        String nomTabIns = insertTab + ".meta.txt";
+        String dir = arc.obtenerRutaDirectorioTablaEspecifica(insertTab) + nomTabIns;
+        System.out.println(dir);
 
-                        if (esta) {
-//                            JOptionPane.showMessageDialog(this, "¡¡ La conexión ya está creada, intenta de nuevo !!", "Advetencia", JOptionPane.WARNING_MESSAGE);
-                            
-                        } else if (!esta) {
-//                            this.contrCon.guardarConexion(new DatosConexion(usuario, host, puerto, pass));
-//                            this.contrCon.guardarConexiones();
-                            //contr.crearUser(/*usuario, pass*/);
-//                            JOptionPane.showMessageDialog(this, "¡¡ Conexión creada con éxito !!", "Información Conexión", JOptionPane.INFORMATION_MESSAGE);
-                            
-                        }
-                        
-                        //contr.TipoDato(nomTabIns, nomCmple, nomCmple);
+//                        Comprueba que esite la tabla para hacer el proceso de insersión
+        if (conex.existeArch(dir)) {
+
+            System.out.println("existe");
+            String colTab = contr.columnasInsert(consul);
+            String colIns = contr.campsInsert(consul);
+//                                System.out.println(colTab);
+//                                System.out.println(colIns);
+
+            //Guarda los datos a insertar
+            int tama = 0;
+            //cmapos: nombre, tipo, nulleable. se hace por cada dato en el insert                           
+            String[] colsIn = colIns.split(",");
+            ArrayList<String> datos = new ArrayList<String>();
+
+            //Busca las columnas de las tablas
+            //cmapos: nombre, tipo, nulleable. se hace por cada dato en el insert                           
+            String[] colsCam = colTab.split(",");
+            ArrayList<String> datosC = new ArrayList<String>();
+            int va = 0;
+
+            while (tama < (colsIn.length)) {
+                System.out.println(colsIn[tama]);
+                //datos.add(colsIn[tama]);  
+
+                System.out.println(colsCam[tama]);
+                datos.add(colsIn[tama]);
+
+                va = contr.validarCampoComparacion(insertTab, colsCam[tama], colsIn[tama]);
+
+                tama++;
+            }
+            
+            System.out.println(va + " valor");
+            
+            if (va == 1) {
+                this.conex.guardarDato(new Dato(datos));
+                this.conex.guardarColumnass(insertTab);
+
+            } else if (va == -1) {
+
+            } else if (va == 0) {
+
+            }
+
+            System.out.println(datos + "datos");
+
+        } else {
+            System.out.println("No existe la tabla");
+        }
+
     }
-    
-    public void opcion3delete(){
-        String consul = this.txt_consulta.getText().toUpperCase();        
+
+    public void opcion3delete() {
+        String consul = this.txt_consulta.getText().toUpperCase();
         //System.out.println("Aun no implementado Delete");
         String deleteTab = contr.nombreTablaDelete(consul);
         System.out.println(deleteTab);
