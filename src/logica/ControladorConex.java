@@ -16,6 +16,8 @@ import persistencia.Tabla;
  */
 public class ControladorConex {
     
+    Persistencia per = new Persistencia();
+    
     private List<Tabla> columnas;
     private Gson gson;
     private Archivo archivo;
@@ -110,5 +112,11 @@ public class ControladorConex {
         else
             return false;
     }
+    
+    public void archivo(String nom)
+    {
+        per.establecerArchivo(nom);
+    }
+    
     
 }

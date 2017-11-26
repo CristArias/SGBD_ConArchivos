@@ -7,7 +7,7 @@ package logica;
  */
 public class Contr {
     
-    Control control = new Control();
+    
 // ****************** Determina qué operación se va a realizar *****************************
     public int esOperacion(String consulta)
     {
@@ -150,7 +150,6 @@ public class Contr {
             values = dats[tam].split(";");
             for (int i = 1; i < values.length; i++) {
                 System.out.println(values[i] + " " + i);
-                control.insertarEnTabla(values[1], values[2], values[3]);
             }
             tam++;
         }                 
