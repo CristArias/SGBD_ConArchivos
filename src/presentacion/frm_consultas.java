@@ -312,6 +312,7 @@ public class frm_consultas extends javax.swing.JFrame {
             if (va == 1) {
                 this.conex.guardarDato(new Dato(datos));
                 this.conex.guardarColumnass(insertTab);
+                JOptionPane.showMessageDialog(this, "Los datos fueron insertados correctamente en la tabla " + insertTab, "Informe de Inserción", JOptionPane.INFORMATION_MESSAGE);
 
             } else if (va == -1) {
 
