@@ -8,29 +8,32 @@ package logica;
 public class Contr {
     
     Control control = new Control();
-// ****************** Determina qué operación se va a realizar *****************************
+// ******************  *****************************
+    /**
+     * Determina qué operación se va a realizar (insert, delete, create, select)
+     * @param consulta consulta que envia el usuario
+     * @return entero con el tipo de consulta que va a realizar. 
+     * 0 - error, 1 - create, 2 - insert, 3 - delete, 4 - select
+     */    
     public int esOperacion(String consulta)
     {
-        String MiCadena = "";
-        
-        consulta = consulta.trim();//elimina espacios
-        
+        String MiCadena;        
+        consulta = consulta.trim();//elimina espacios al inicio y al final        
         MiCadena = consulta.replaceAll(" +", " ");
         String[] MiCadena2 = MiCadena.split(" ");        
-        
-        String cadenita = "";
+                
         for(String columna: MiCadena2)
         {
-            if(columna.toUpperCase().equals("CREATE"))
+            if(columna.equalsIgnoreCase("CREATE"))
                 return 1;
             
-            if(columna.toUpperCase().equals("INSERT"))
+            if(columna.equalsIgnoreCase("INSERT"))
                 return 2;
             
-            if(columna.toUpperCase().equals("DELETE"))
+            if(columna.equalsIgnoreCase("DELETE"))
                 return 3;
             
-            if(columna.toUpperCase().equals("SELECT"))
+            if(columna.equalsIgnoreCase("SELECT"))
                 return 4;
         }
         return 0;
@@ -40,10 +43,13 @@ public class Contr {
     //CREATE TABLE nombre_tabal ( columna_nombre1 tipodato NULL, columna_nombre1 tipodato NULL )
     //CREATE TABLE actor ( act_id tipodato NULL, act_nombre tipodato NULL )
     
-    
+    /**
+     * retorna el nombre de la tabla que se desea crear
+     * @param textodeconsulta consulta que realizo el usuario
+     * @return nombre de la tabla
+     */
     public String nombreTablaCreate(String textodeconsulta)
-    {
-        
+    {        
         if(textodeconsulta.equalsIgnoreCase(""))
             return  "EL CAMPO DE CONSULTA SE ENCUENTRA VACIO";
         
@@ -54,21 +60,15 @@ public class Contr {
         MiCadena = textodeconsulta.replaceAll(" +", " ");
         String[] MiCadena2 = MiCadena.split(" ");        
         
-        String cadenita = "";
-        
-        cadenita = MiCadena2[2];
+        String cadenita = MiCadena2[2];
         
         return cadenita;
     }
     
     public String[] camposCreate(String textodeconsulta)
-    {
-        
-        String MiCadena = "";
-        
-        textodeconsulta = textodeconsulta.trim();//elimina espacios
-        
-        MiCadena = textodeconsulta.replaceAll(" +", " ");
+    {                
+        textodeconsulta = textodeconsulta.trim();//elimina espacios        
+        String MiCadena = textodeconsulta.replaceAll(" +", " ");
         String[] MiCadena2 = MiCadena.split(" ");        
         String res = MiCadena2[1];
         
@@ -113,8 +113,10 @@ public class Contr {
                 Columnas[i] = Columnas[i].trim();
             }
 
-            if(Columnas.length < cont)
-                errores = errores + "¡La sentencia de las columnas se encuentra erronea!";                       
+            if(Columnas.length < cont){
+                errores = errores + "¡La sentencia de las columnas se encuentra erronea!";
+                System.out.println(errores);
+            }
         }
         
         return SintaxisCreate(MiCadena);

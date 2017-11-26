@@ -70,7 +70,7 @@ public class frm_consultas extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -82,7 +82,7 @@ public class frm_consultas extends javax.swing.JFrame {
                 .addGap(9, 9, 9)
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -110,9 +110,11 @@ public class frm_consultas extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -135,23 +137,30 @@ public class frm_consultas extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(359, 359, 359)
+                                .addComponent(jLabel1))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(26, 26, 26)
+                                .addComponent(jLabel2)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txt_consulta)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(359, 359, 359)
-                        .addComponent(jLabel1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn_consultar)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel2)
-                                .addComponent(txt_consulta, javax.swing.GroupLayout.PREFERRED_SIZE, 758, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(btn_consultar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -164,8 +173,8 @@ public class frm_consultas extends javax.swing.JFrame {
                 .addComponent(txt_consulta, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_consultar)
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -175,28 +184,30 @@ public class frm_consultas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_consultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_consultarActionPerformed
+        consultar();
+    }//GEN-LAST:event_btn_consultarActionPerformed
+
+    public void consultar(){
         //ResultSet tablas = contr.ObtenerDatosTablasUsuario();
+        //metodo para saber si es SELECT, INSERT, DELETE o CREATE
         int realizar = contr.esOperacion(this.txt_consulta.getText());
         String consul = this.txt_consulta.getText().toUpperCase();
         //String errores = contr.ConsultaSELECTAValidar(this.txt_consulta.getText()); //Logger.getLogger(consultas.class.getName()).log(Level.SEVERE, null, ex);
-        //OJO: es necesario crear un metodo para saber si es SELECT, INSERT, DELETE o CREATE
+        
         //System.out.println(consul);
         switch (realizar) {
-
-                case 1: //System.out.println("Aun no implementado Create"); 
+                case 1: //System.out.println("Aun no implementado Create");
                         String nomTabla = contr.nombreTablaCreate(consul);
                         //System.out.println(nomTabla);
                         String nomCmple = nomTabla+".txt";
-                        control.archivo(nomCmple);
-                        
-                        //control.insertarEnTabla("campo1", "varchar", "not null");
-                        
-                        String[] dats = contr.camposCreate(consul);
-                        
+                        control.archivo(nomCmple);                        
+                        //control.insertarEnTabla("campo1", "varchar", "not null");                        
+                        String[] dats = contr.camposCreate(consul);                        
                         String[] values;
 //                        System.out.println(dats[0]);
 //                        System.out.println(dats.length);
                         int tam = 0;
+                        //cmapos: nombre, tipo, nulleable. se hace por cada dato en el insert
                         String camp1 = "";
                         String camp2 = "";
                         String camp3 = "";
@@ -215,12 +226,11 @@ public class frm_consultas extends javax.swing.JFrame {
                                 if(i == 3)
                                 {
                                     camp3 = values[i];
-                                }
-                                
+                                }                                
                                 //System.out.println(camp1+ " " + camp2 + " "+ camp3);
                                 //control.insertarEnTabla(values[1], values[2], values[3]);
                             }
-//                            control.insertarEnTabla(camp1,camp2,camp3);
+//                              control.insertarEnTabla(camp1,camp2,camp3);
                             
                             this.conex.guardarColumna(new Tabla(camp1, camp2, camp3));
                             this.conex.guardarColumnas(nomCmple);
@@ -264,8 +274,7 @@ public class frm_consultas extends javax.swing.JFrame {
                 default: System.out.println("No valida");
                         break;
             }
-    }//GEN-LAST:event_btn_consultarActionPerformed
-
+    }
     /**
      * @param args the command line arguments
      */
