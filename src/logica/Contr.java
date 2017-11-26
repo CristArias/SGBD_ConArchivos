@@ -123,17 +123,7 @@ public class Contr {
                 {
                     Columnas[i] = Columnas[i].trim();
                 }
-                
-//                if(Columnas.length < cont){
-//                    errores = errores + "¡La sentencia de las columnas se encuentra erronea!";
-//                    System.out.println(errores);
-//                }
-            }
-            
-            
-            
-
-            
+            }            
         }
         
         return SintaxisCreate(MiCadena);
