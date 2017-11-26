@@ -2,6 +2,7 @@
 package logica;
 
 import com.google.gson.Gson;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,18 +56,39 @@ public class ControladorConex {
     }
 
 //    guarda las conexiones de la lista al archivo
-    public void guardarColumnas(String archCon) {
-        this.eliminarArchivo(archCon);
+    public void guardarColumnas(String archCon) {        
+        String sep = System.getProperty("file.separator");
+        String rutaTablas = Archivo.obtenerRutaDirectorioTablaEspecifica(archCon);
+        //comprobar que existe el folder, si no existe se crea uno nuevo
+        File file = new File(rutaTablas);
+        if(!file.exists()){
+            file.mkdirs();
+        }               
+        //this.eliminarArchivo(archCon);
+        //creando archivo de metadatos
         try {
-            this.archivo.abrirArchivo(archCon, true);
-            for (String dato : this.listAJson()) {
+            this.archivo.abrirArchivo(rutaTablas + sep + archCon + ".meta.txt", true);
+            String[] json = this.listAJson();
+            for (String dato : json) {
                 this.archivo.escribirArchivo(dato);
             }
+        } catch (IOException ex) {
+            System.out.println("error creando archivo de metadatos");
+            Logger.getLogger(ControladorConex.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            this.archivo.cerrarArchivo();
+        }
+        //creando archivo de datos
+        try {
+            this.archivo.abrirArchivo(rutaTablas + sep + archCon + ".datos.txt", true);            
             this.archivo.cerrarArchivo();
         } catch (IOException ex) {
             Logger.getLogger(ControladorConex.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+            System.out.println("error creando archivo de datos");
+        }finally{
+            this.archivo.cerrarArchivo();
+        }       
+    } 
 
 //    Carga las conexiones que estan en el archio a una lista
     public void cargarColumnas(String archCon) {
@@ -85,7 +107,7 @@ public class ControladorConex {
     }
 
 //    Guarda una columnas en la lista
-    public void guardarColumna(Tabla columnas) {
+        public void guardarColumna(Tabla columnas) {
         this.columnas.add(columnas);
     }
     

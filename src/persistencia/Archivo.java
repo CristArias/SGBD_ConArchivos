@@ -16,6 +16,7 @@ public class Archivo {
     
     private BufferedWriter archivoEscritura;
     private BufferedReader archivoLectura;
+    private String rutaTablas ;
 //    private ArrayList<Object> list;
 
     /**
@@ -48,12 +49,16 @@ public class Archivo {
         return archivoLectura.readLine();
     }
 
-    public void cerrarArchivo() throws IOException {
-        if (archivoEscritura != null) {
-            archivoEscritura.close();
-        }
-        if (archivoLectura != null) {
-            archivoLectura.close();
+    public void cerrarArchivo(){
+        try{
+            if (archivoEscritura != null) {
+                archivoEscritura.close();
+            }
+            if (archivoLectura != null) {
+                archivoLectura.close();
+            }
+        }catch(IOException ex){
+            System.out.println("Exepcion cerrando e archivo. clase Archivo");
         }
     }
 
@@ -113,4 +118,27 @@ public class Archivo {
         file.delete();
     }
     
+    public static String obtenerRutaDirectorioTablas() {
+        File miDir = new File(".");
+        String ruta = "";
+        try {
+            String sep = System.getProperty("file.separator");
+            ruta = miDir.getCanonicalPath()+sep + "Tablas" + sep;
+        } catch (Exception e) {
+            System.out.println("Error al leer el archivo");
+        }
+        return ruta;
+    }
+    
+    public static String obtenerRutaDirectorioTablaEspecifica(String nombreTabla) {
+        File miDir = new File(".");
+        String ruta = "";
+        try {
+            String sep = System.getProperty("file.separator");
+            ruta = miDir.getCanonicalPath()+sep + "Tablas" + sep + nombreTabla + sep;
+        } catch (Exception e) {
+            System.out.println("Error al leer el archivo");
+        }
+        return ruta;
+    }
 }

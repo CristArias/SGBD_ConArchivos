@@ -185,24 +185,26 @@ public class frm_consultas extends javax.swing.JFrame {
     public void consultar(){
         //ResultSet tablas = contr.ObtenerDatosTablasUsuario();
         //metodo para saber si es SELECT, INSERT, DELETE o CREATE
+        contr = new Contr();
+        conex = new ControladorConex();
         int realizar = contr.esOperacion(this.txt_consulta.getText());
         String consul = this.txt_consulta.getText().toUpperCase();
         //String errores = contr.ConsultaSELECTAValidar(this.txt_consulta.getText()); //Logger.getLogger(consultas.class.getName()).log(Level.SEVERE, null, ex);
         
         //System.out.println(consul);
-        switch (realizar) {
+        String nomTabla;
+        switch (realizar) {                
                 case 1: //System.out.println("Aun no implementado Create");
-                        String nomTabla = contr.nombreTablaCreate(consul);
-                        //System.out.println(nomTabla);
-                        String nomCmple = nomTabla+".txt";
-                        conex.archivo(nomCmple);                        
+                        nomTabla = contr.nombreTablaCreate(consul);
+                        //System.out.println(nomTabla);                        
+                        conex.archivo(nomTabla);                        
                         //control.insertarEnTabla("campo1", "varchar", "not null");                        
                         String[] dats = contr.camposCreate(consul);                        
                         String[] values;
 //                        System.out.println(dats[0]);
 //                        System.out.println(dats.length);
                         int tam = 0;
-                        //cmapos: nombre, tipo, nulleable. se hace por cada dato en el insert
+                        //campos: nombre, tipo, nulleable. se hace por cada dato en el insert
                         String camp1 = "";
                         String camp2 = "";
                         String camp3 = "";
@@ -227,11 +229,10 @@ public class frm_consultas extends javax.swing.JFrame {
                             }
 //                              control.insertarEnTabla(camp1,camp2,camp3);
                             
-                            this.conex.guardarColumna(new Tabla(camp1, camp2, camp3));
-                            this.conex.guardarColumnas(nomCmple);
-                            
+                            this.conex.guardarColumna(new Tabla(camp1, camp2, camp3));                                                        
                             tam++;
                         }  
+                        this.conex.guardarColumnas(nomTabla);                        
                         //System.out.println(campsCrea);
                         break;  
                         

@@ -1,0 +1,2 @@
+{"nomCol":"INT","tipoDato":"INT","nulleable":"NULL"}
+{"nomCol":"HOLA","tipoDato":"INT","nulleable":"NULL"}

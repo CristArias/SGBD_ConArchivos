@@ -1,0 +1,4 @@
+{"nomCol":"INT","tipoDato":"INT","nulleable":"NULL"}
+{"nomCol":"INASD","tipoDato":"INT","nulleable":"NULL)"}
+{"nomCol":"INT","tipoDato":"INT","nulleable":"NULL"}
+{"nomCol":"INASD","tipoDato":"INT","nulleable":"NULL)"}
