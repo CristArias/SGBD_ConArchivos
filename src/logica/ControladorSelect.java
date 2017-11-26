@@ -6,7 +6,11 @@ import com.google.gson.JsonParser;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import persistencia.Archivo;
+import persistencia.Dato;
 import persistencia.Tabla;
 
 /**
@@ -15,7 +19,7 @@ import persistencia.Tabla;
  */
 public class ControladorSelect {      
     
-    private Gson gson = new Gson();
+    private Gson gson = new Gson();        
     
     /**
      * Aplica un split al texto de la consulta y mira las columnas
@@ -86,10 +90,9 @@ public class ControladorSelect {
     }
     
     public String nombreTablaSelect(String consulta)
-    {
-        String MiCadena = "";        
+    {        
         consulta = consulta.trim();//elimina espacios        
-        MiCadena = consulta.replaceAll(" +", " ");
+        String MiCadena = consulta.replaceAll(" +", " ");
         String[] MiCadena2 = MiCadena.split(" ");                
         String cadenita = "";
         for(String columna: MiCadena2)
@@ -119,9 +122,9 @@ public class ControladorSelect {
                 return errores + "La consulta se encuentra incompleta.";
                
             boolean isWhere = false;
+            boolean isInner = false;
             String nombreColumnas = "";
-            String nombreTabla = "";
-            String nombreTabla2 = "";
+            String nombreTabla = "";            
             String nombreColumnaWhere = "";
             boolean where5 = false;
             boolean where6 = false;
@@ -132,7 +135,7 @@ public class ControladorSelect {
             
             for(int i = 0; i < campos.length; i++)//if (!campos.length >= 3) 
             {                                                
-                System.out.println(campos[i] + " +" + i);
+                //System.out.println(campos[i] + " +" + i);
                     
                     //SELECT este en posición correspondiente y este bien escrito
                     if(i == 0 && !campos[i].equalsIgnoreCase("SELECT"))
@@ -146,12 +149,14 @@ public class ControladorSelect {
                         return errores + "La sentencia FROM no se encuentra especificada \n";
                     
                     if(i == 3){                        
-                        if(esTabla(campos[i])){
+                        if(esTabla(campos[i])){                            
                             nombreTabla = campos[i];
-                            String[] cols = nombreColumnas.split(",");
-                            for (String col : cols) {
-                                if(!esColumnaTabla(campos[i], col))
-                                    return "error. Columna \'"+ col +"\' desconocida.";
+                            if (!nombreColumnas.equalsIgnoreCase("*")){                                                            
+                                String[] cols = nombreColumnas.split(",");  
+                                for (String col : cols) {
+                                    if(!esColumnaTabla(campos[i], col))
+                                        return "error. Columna \'"+ col +"\' desconocida.";
+                                }
                             }
                         }else{
                             return "error. La tabla no existe, verifique su consulta.";
@@ -161,7 +166,7 @@ public class ControladorSelect {
                     if(i == 4 && campos[i].equalsIgnoreCase("WHERE")){isWhere = true;}
                     else{ 
                         if(i == 4 && campos[i].equalsIgnoreCase("INNER")){ 
-                            isWhere = false;
+                            isInner = true;
                         }else {
                             if(i == 4)
                                 return "error, se esperaba la clausula INNER ó WHERE.";
@@ -206,15 +211,17 @@ public class ControladorSelect {
                             //validar que exista la tabla del join, retornar la
                             if(!esTabla(campos[i])){
                                 return "error. La tabla \'"+campos[i]+"\' no existe, verifique su consulta";
-                            }
-                            nombreTabla2 = campos[i];
+                            }                            
                         }
                         if(i == 7 && !campos[i].equalsIgnoreCase("ON")){
                             return "error, se esperaba la clausula ON.";
                         }                    
 
-                        if(i > 8){                            
-                            String[] conds = campos[i].split(".");
+                        if(i == 8){
+                                                        
+                            System.out.println("tabla ========" + (campos[i]));
+                            System.out.println("tabla ========" + Arrays.toString(campos[i].split(".")));
+                            String[] conds = campos[i].split("\\.");
                             if(esTabla(conds[0])){
                                 if(!esColumnaTabla(conds[0], conds[1])){
                                     return "error. la tabla "+conds[0]+" no posee la columna "+conds[1];
@@ -234,7 +241,7 @@ public class ControladorSelect {
                         }
                         
                         if(i == 10){
-                            String[] conds = campos[i].split(".");
+                            String[] conds = campos[i].split("\\.");
                             if(esTabla(conds[0])){
                                 if(!esColumnaTabla(conds[0], conds[1])){
                                     return "error. la tabla "+conds[0]+" no posee la columna "+conds[1];
@@ -245,45 +252,52 @@ public class ControladorSelect {
                             consultaInnerFull = true;                            
                         }
                         
-                        if(i == 11 && !campos[i].equalsIgnoreCase("ORDER")){
-                            hayOrder = true;
-                            return "error. se esperaba la clausula ORDER.";
+                        if(i == 11){
+                            if(!campos[i].equalsIgnoreCase("ORDER")){
+                                return "error. se esperaba la clausula ORDER.";
+                            }
+                            hayOrder = true;                            
                         }
                         
                         if(i == 12 && !campos[i].equalsIgnoreCase("BY")){
                             return "error. se esperaba la clausula BY.";
                         }
 
-                        if(i == 13){                                         
-                            //validar que la columna este en la tabla
-                            if(esColumnaTabla(nombreTabla, campos[i]) || esColumnaTabla(nombreTabla2, campos[i])){
-                                return "error";
+                        if(i == 13){               
+                            String[] conds = campos[i].split("\\.");
+                            if(esTabla(conds[0])){
+                                if(!esColumnaTabla(conds[0], conds[1])){
+                                    return "error. la tabla "+conds[0]+" no posee la columna "+conds[1];
+                                }                                
+                            }else{
+                                return "error. la tabla "+conds[0]+" no existe";
                             }
                             consultaInnerFullOrder = true;
-                        }
-                        
+                        }                        
                     }
             }           
         if(isWhere){
             if(where5 && where6 && where7){
-                return null;
+                return "WHERE";
             }
             else return "error. faltan algunas sentencias asociadas a la clausula WHERE.";
-        }else{
+        }
+        if(isInner){
             if(consultaInnerFull){
                 if(hayOrder){
                     if(consultaInnerFullOrder){
-                        return null;
+                        return "FULL_INNER_JOIN_ORDER";
                     }else{
                         return "error. faltan algunas sentencias asociadas a la clausula ORDER.";
                     }            
                 }
-                return null;
+                return "FULL_INNER_JOIN";
             }
             else{
                 return "error. faltan algunas sentencias asociadas a la clausula INNER.";
             }
         }
+        return "NORMAL";
     }
     
     /**
@@ -323,7 +337,8 @@ public class ControladorSelect {
      * @param nombreTabla nombre de la tabla
      * @param nombreColumna nombre de la columna
      * @param valor valor que se desea evaluar
-     * @return TRUE si la cadena valor es valida, FALSE de lo contrario
+     * @return 1 si la cadena valor es valida, 0 de lo contrario, 
+     * -1 si el campo es varchar y a la cadena le hace faltan comillas
      */
     private int validarCampoComparacion(String nombreTabla, String nombreColumna, String valor) {
         String sep = System.getProperty("file.separator");
@@ -331,7 +346,7 @@ public class ControladorSelect {
         Archivo arch = new Archivo();
         Tabla tabla = new Tabla();
         arch.abrirArchivo(path + sep + nombreTabla +".meta.txt", false);
-        while(arch.puedeLeer()){            
+        while(arch.puedeLeer()){
             String leer = arch.leerArchivo();        
             tabla = gson.fromJson(leer, Tabla.class);
             if (tabla.getNomCol().equalsIgnoreCase(nombreColumna)){
@@ -403,4 +418,135 @@ public class ControladorSelect {
         }
         return 1;
     }    
+    
+    
+    
+    
+    //=====================================================Consulta a archivos=============================================
+    public ArrayList<Dato> consultaNormal(String consulta){
+        String sep = System.getProperty("file.separator");
+        String[] cadena = consulta.split(" ");       
+        String path = Archivo.obtenerRutaDirectorioTablaEspecifica(cadena[2]);        
+        
+        //obtener los datos de los archivos de la tabla
+        String datos = path + sep + cadena[2] +".meta.txt";
+        String metadatos = path + sep + cadena[2] +".datos.txt";                
+        List<Tabla> listaMetadatos = obtenerMetadatos(metadatos);
+        List<Dato> listaDatos = obtenerDatos(datos);
+        
+        //obtener las columnas de la consulta
+        String[] campos = consulta.split(" ");               
+        String[] columnas = campos[1].split(",");            
+        List<Integer> posDatos = new ArrayList<>();
+        
+        //obteer el indice de las columnas que se desean consultar
+        for (String columna : columnas) {
+            for (int i = 0; i < listaMetadatos.size(); i++) {
+                if(listaMetadatos.get(i).getNomCol().equals(columna)) 
+                    posDatos.add(i);
+            }                        
+        }                        
+        ArrayList<Dato> resultado = new ArrayList<>();        
+        //adicionar una cabecera para mostrar los datos 
+        ArrayList<String> cabecera =  new ArrayList<>();
+        cabecera.addAll(Arrays.asList(campos));            
+        resultado.add(new Dato(cabecera));
+        
+        //dacionar los datos de la lista de datos a la lista de resultados
+        for (Dato dato : listaDatos) {
+            ArrayList<String> aux =  new ArrayList<>();
+            for (int i = 0; i < posDatos.size(); i++) {
+                aux.add(dato.getDatos().get(posDatos.get(i)));                
+            }            
+            resultado.add(new Dato(aux));
+        }                 
+        
+        return resultado;
+    }
+    
+    public void consultaWhere(String consulta){
+        
+    }
+    
+    public void consultaInnerJoin(String consulta){
+        
+    }
+    
+    public void consultaInnerJoinOrder(String consulta){
+        
+    }        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /**
+     * obtener los metadatos de una tabla
+     * @param path ruta cmpleta del archivo de metadatos
+     * @return lista con los metadatos de la tabla
+     */
+    public ArrayList<Tabla> obtenerMetadatos(String path){        
+        String sep = System.getProperty("file.separator");
+        Archivo arch = new Archivo();
+        ArrayList<Tabla> listaTabla = new ArrayList<>();
+        Tabla tabla;
+        arch.abrirArchivo(path, false);
+        while(arch.puedeLeer()){
+            String leer = arch.leerArchivo();        
+            tabla = gson.fromJson(leer, Tabla.class);
+            listaTabla.add(tabla);
+        } 
+        return listaTabla;
+    }
+    
+    /**
+     * obtener los datos de una tabla
+     * @param path ruta completa del archivo de datos
+     * @return lista con los datos de la tabla
+     */
+    public ArrayList<Dato> obtenerDatos(String path){        
+        String sep = System.getProperty("file.separator");
+        Archivo arch = new Archivo();
+        ArrayList<Dato> listaTabla = new ArrayList<>();
+        Dato tabla;
+        arch.abrirArchivo(path, false);
+        while(arch.puedeLeer()){
+            String leer = arch.leerArchivo();        
+            tabla = gson.fromJson(leer, Dato.class);
+            listaTabla.add(tabla);
+        } 
+        return listaTabla;
+    }        
+    
+    
+    /**
+     * le da formato a las columnas que se desean consultar
+     * @param consulta consulta ingresada por el usuario
+     * @return consulta formateada
+     */
+    public String darFormatoConsulta(String consulta){                  
+        consulta = consulta.trim();//elimina espacios        
+        String MiCadena = consulta.replaceAll(" +", " ");
+        String[] MiCadena2 = MiCadena.split(" ");        
+        String cadenita = "";
+        for(String columna: MiCadena2)
+        {
+            if(columna.equalsIgnoreCase("SELECT"))
+                continue;            
+            if(columna.equalsIgnoreCase("FROM"))
+                break;            
+            cadenita = cadenita + " " + columna;///cada una de las columnas que esta en la consulta las concatena
+            //System.out.println(cadenita);
+        }        
+        String cadenaNueva = cadenita.replace(" ", "");
+        cadenita = cadenita.trim();
+        MiCadena = MiCadena.replace(cadenita, cadenaNueva);
+        
+        return MiCadena;
+    }
+    
 }
