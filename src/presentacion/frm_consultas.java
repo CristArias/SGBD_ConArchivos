@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package presentacion;
 
+import static java.awt.SystemColor.control;
 import logica.Contr;
-import logica.Control;
 import logica.ControladorConex;
 import persistencia.Tabla;
 
@@ -17,7 +13,6 @@ import persistencia.Tabla;
 public class frm_consultas extends javax.swing.JFrame {
     
     Contr contr = new Contr();
-    Control control = new Control();
     ControladorConex conex = new ControladorConex();
 
     /**
@@ -200,7 +195,7 @@ public class frm_consultas extends javax.swing.JFrame {
                         String nomTabla = contr.nombreTablaCreate(consul);
                         //System.out.println(nomTabla);
                         String nomCmple = nomTabla+".txt";
-                        control.archivo(nomCmple);                        
+                        conex.archivo(nomCmple);                        
                         //control.insertarEnTabla("campo1", "varchar", "not null");                        
                         String[] dats = contr.camposCreate(consul);                        
                         String[] values;
@@ -247,7 +242,7 @@ public class frm_consultas extends javax.swing.JFrame {
                         if(conex.existeArch(nomTabIns))
                             System.out.println("exite");
                         else
-                            System.out.println("No existe");
+                            System.out.println("No existe la tabla");
                         
 //                        String colIns = contr.columnasInsert(consul);
 //                        System.out.println(colIns);
