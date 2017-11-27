@@ -1,0 +1,1 @@
+{"nomCol":"PAI_ID","tipoDato":"INT","nulleable":"NULL"}

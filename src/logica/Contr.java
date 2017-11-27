@@ -468,22 +468,23 @@ public class Contr {
             //se suma dos ya que debe tener en cuenta las comillas
             int limite = Integer.parseInt(limites[0]) + 2;
             if(valor.charAt(0) != '\''){
-                return -1;
+                return -2; //Si falta comilla de inicio del varchar
             }
             if(valor.charAt(valor.length()-1) != '\''){
-                return -1;
+                return -1; //Si falta comilla del final del varchar
             }            
             if(valor.length() < limite) 
-                return 1;
+                return 1; //Datos correctos
             else 
-                return 0;                       
+                return 2; //Datos incorrectos                     
         }
+        
         if(tipoDato.equalsIgnoreCase("INT")){
             try{
                 Integer.parseInt(valor);
                 return 1;
             }catch(NumberFormatException nfe){
-                return 0;
+                return 3;//error en entero
             }
         }
         if(tipoDato.equalsIgnoreCase("FLOAT")){
@@ -491,13 +492,13 @@ public class Contr {
                 Float.parseFloat(valor);
                 return 1;
             }catch(NumberFormatException nfe){
-                return 0;
+                return 4;//error en float
             }
         }
         if(tipoDato.equalsIgnoreCase("DATE")){
             return validarFecha(valor);
         }
-        return 0;
+        return 0;//Datos no reconocidos
     }
     
     /**
@@ -511,7 +512,7 @@ public class Contr {
             formatoFecha.setLenient(false);
             formatoFecha.parse(fecha);
         } catch (ParseException e) {
-            return 0;
+            return 5;//fecha invalida
         }
         return 1;
     }    

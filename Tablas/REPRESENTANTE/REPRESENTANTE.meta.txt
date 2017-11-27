@@ -1,0 +1,1 @@
+{"nomCol":"REP_ID","tipoDato":"INT","nulleable":"NULL"}

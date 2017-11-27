@@ -260,6 +260,8 @@ public class frm_consultas extends javax.swing.JFrame {
         String consul = this.txt_consulta.getText().toUpperCase();
         String nomTabla = contr.nombreTablaCreate(consul);
         conex.archivo(nomTabla);
+        String dir = arc.obtenerRutaDirectorioTablas()+nomTabla;
+        System.out.println(dir);
         //control.insertarEnTabla("campo1", "varchar", "not null"); 
         String[] dats = contr.camposCreate(consul);
         String[] values;
@@ -269,24 +271,31 @@ public class frm_consultas extends javax.swing.JFrame {
         String camp2 = "";
         String camp3 = "";
 
-        while (tam < (dats.length)) {
-            values = dats[tam].split(";");
-            for (int i = 1; i < values.length; i++) {
-                if (i == 1) {
-                    camp1 = values[i];
+        if(conex.existDirec(dir))
+        {
+            JOptionPane.showMessageDialog(this, "La tabla " + nomTabla + ", ya se encuentra creada, intenta de nuevo", "Advertencia al crear", JOptionPane.WARNING_MESSAGE);
+        }else{
+            
+            while (tam < (dats.length)) 
+            {
+                values = dats[tam].split(";");
+                for (int i = 1; i < values.length; i++) 
+                {
+                    if (i == 1) { camp1 = values[i]; }
+                    
+                    if (i == 2) { camp2 = values[i]; }
+                    
+                    if (i == 3) { camp3 = values[i]; }
                 }
-                if (i == 2) {
-                    camp2 = values[i];
-                }
-                if (i == 3) {
-                    camp3 = values[i];
-                }
+                this.conex.guardarColumna(new Tabla(camp1, camp2, camp3));
+                tam++;
             }
-            this.conex.guardarColumna(new Tabla(camp1, camp2, camp3));
-            tam++;
+            this.conex.guardarColumnas(nomTabla);
+            JOptionPane.showMessageDialog(this, "La tabla " + nomTabla + ", fué creada satisfactoriamente", "Informe de creación", JOptionPane.INFORMATION_MESSAGE);
+            txt_consulta.setText("");
+            jtxt_errores.setText("Consulta ejecutada correctamente");
         }
-        this.conex.guardarColumnas(nomTabla);
-        JOptionPane.showMessageDialog(this, "La tabla " + nomTabla + ", fué creada satisfactoriamente", "Informe de creación", JOptionPane.INFORMATION_MESSAGE);
+        
     }
 
     //insert into PAIS ( PAI_ID, PAI_NOMBRE ) values ( 1, 'HOLA' )
@@ -298,7 +307,8 @@ public class frm_consultas extends javax.swing.JFrame {
         String dir = arc.obtenerRutaDirectorioTablaEspecifica(insertTab) + nomTabIns;
         System.out.println(dir);
 
-//                        Comprueba que esite la tabla para hacer el proceso de insersión
+        String err = "";
+//      Comprueba que esite la tabla para hacer el proceso de insersión
         if (conex.existeArch(dir)) {
 
             System.out.println("existe");
@@ -327,9 +337,18 @@ public class frm_consultas extends javax.swing.JFrame {
                 datos.add(colsIn[tama]);
 
                 va = contr.validarCampoComparacion(insertTab, colsCam[tama], colsIn[tama]);
-
+                
+                if(va == -2){ err = err + "Falta comilla inicio o no es varchar "+ colsIn[tama]+"\n"; }
+                if(va == -1){ err = err + "\nFalta cerrar comilla o no es varhar " + colsIn[tama]+"\n"; }
+                if(va == 2){ err = err + "\nTamaño excedido de la cadena ingresada " + colsIn[tama]+"\n"; }
+                if(va == 3){ err = err + "\nEl tipo no es entero (int) "+ colsIn[tama]+"\n"; }
+                if(va == 4){ err = err + "\nEl tipo no es flotante (float) "+ colsIn[tama]+"\n"; }
+                if(va == 5){ err = err + "\nLa fecha no contiene el formato (dd-mm-yyyy) "+ colsIn[tama]+"\n"; }
+                if(va == 0){ err = err + "\nEl dato "+ colsIn[tama]+" a insertar no es int, float, date o varchar"; }
+                
                 tama++;
             }
+            jtxt_errores.setText(err);
             
             System.out.println(va + " valor");
             
@@ -338,13 +357,8 @@ public class frm_consultas extends javax.swing.JFrame {
                 this.conex.guardarColumnass(insertTab);
                 JOptionPane.showMessageDialog(this, "Los datos fueron insertados correctamente en la tabla " + insertTab, "Informe de Inserción", JOptionPane.INFORMATION_MESSAGE);
 
-            } else if (va == -1) {
-
-            } else if (va == 0) {
-
-            }
-
-            System.out.println(datos + "datos");
+            } 
+//            System.out.println(datos + "datos");
 
         } else {
             System.out.println("No existe la tabla");

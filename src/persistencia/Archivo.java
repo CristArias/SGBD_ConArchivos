@@ -118,6 +118,12 @@ public class Archivo {
         return f.exists();
     }
     
+    public boolean existeDirectorio(String directorio)
+    {
+        File f = new File(directorio);
+        return f.isDirectory();
+    }
+    
     public void eliminarArchivo(String nombreArchivo){
         File file = new File(nombreArchivo);
         file.delete();

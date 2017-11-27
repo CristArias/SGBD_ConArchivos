@@ -196,6 +196,15 @@ public class ControladorConex {
             return false;
     }
     
+    public boolean existDirec(String dir)
+    {
+        boolean exist = archivo.existeDirectorio(dir);
+        if(exist)
+            return true;
+        else
+            return false;
+    }
+    
     public void archivo(String nom)
     {
         per.establecerArchivo(nom);
