@@ -11,10 +11,12 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import logica.Contr;
 import logica.ControladorConex;
 import persistencia.Archivo;
 import persistencia.Dato;
+import persistencia.ModeloJtable;
 import persistencia.Tabla;
 
 /**
@@ -27,12 +29,16 @@ public class frm_consultas extends javax.swing.JFrame {
     ControladorConex conex = new ControladorConex();
     Archivo arc = new Archivo();
     private Gson gson;
+    
+    public ModeloJtable miModeloJtable = new ModeloJtable();
+    DefaultTableModel modeTable;
 
     /**
      * Creates new form frm_consultas
      */
     public frm_consultas() {
         initComponents();
+        modeTable = new DefaultTableModel();
         setLocationRelativeTo(null);
         setTitle("Sistema Gestor de Bases de Datos. Cristian Arias");
     }
@@ -57,6 +63,7 @@ public class frm_consultas extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tbl_resultado = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
+        btn_limpiar = new javax.swing.JButton();
         btn_consultar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -80,7 +87,7 @@ public class frm_consultas extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -89,11 +96,11 @@ public class frm_consultas extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(9, 9, 9)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(141, 141, 141))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -113,6 +120,15 @@ public class frm_consultas extends javax.swing.JFrame {
 
         jLabel4.setText("Resultado Consulta:");
 
+        btn_limpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/gnome_edit_clear.png"))); // NOI18N
+        btn_limpiar.setToolTipText("Limpiar tabla");
+        btn_limpiar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_limpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_limpiarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -122,17 +138,20 @@ public class frm_consultas extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel4)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_limpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 759, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel4)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btn_limpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -147,9 +166,9 @@ public class frm_consultas extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGap(359, 359, 359)
@@ -157,20 +176,17 @@ public class frm_consultas extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGap(26, 26, 26)
                                 .addComponent(jLabel2)))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 358, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txt_consulta)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txt_consulta, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btn_consultar)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btn_consultar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -184,22 +200,30 @@ public class frm_consultas extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_consultar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_consultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_consultarActionPerformed
-        try {
-            consultar();
+        try {   
+            consultar();                
+             
         } catch (IOException ex) {
             Logger.getLogger(frm_consultas.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btn_consultarActionPerformed
+
+    private void btn_limpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_limpiarActionPerformed
+        tbl_resultado.setModel(new DefaultTableModel());
+        frm_consultas frm = new frm_consultas();
+        frm.setVisible(true);
+        txt_consulta.setText("");
+    }//GEN-LAST:event_btn_limpiarActionPerformed
 
     public void consultar() throws IOException {
         //ResultSet tablas = contr.ObtenerDatosTablasUsuario();
@@ -342,7 +366,8 @@ public class frm_consultas extends javax.swing.JFrame {
         ControladorSelect controlSelect = new ControladorSelect();
         String consul = controlSelect.darFormatoConsulta(this.txt_consulta.getText().toUpperCase());
         
-        String errores = controlSelect.ConsultaSELECTAValidar(consul);  
+        String errores = controlSelect.ConsultaSELECTAValidar(consul); 
+        System.out.println(errores);
         String nom = controlSelect.nombreTablaSelect(consul);
         System.out.println(nom);
         
@@ -350,11 +375,61 @@ public class frm_consultas extends javax.swing.JFrame {
         if(errores.equals("NORMAL")){
             this.jtxt_errores.setText("Consulta exitosa.");
             res = controlSelect.consultaNormal(consul);
-            int i  = 4 ;
+            //int i  = 4 ;
+            int tam = 0;
+            tam = res.size();           
+//            System.out.println(res.get(1).getDatos()+" hola dato");   
+//            modeTable = (DefaultTableModel) this.tbl_resultado.getModel();
+            String[] datos;
+            String[] dats = null;
+            datos = res.get(0).getDatos().toString().split(",");
+//            System.out.println(datos[0]+" datos");
+            int cols = 0;
+            
+            cols = res.get(0).getDatos().size()-1;
+            
+            for (int i = 0; i <= cols; i++) {
+                System.out.println(i);
+                modeTable.addColumn(datos[i]);                               
+            }
+            this.tbl_resultado.setModel(modeTable);
+             
+            for (int i = 1; i < tam; i++)             
+            {                    
+                dats = res.get(i).getDatos().toString().split(",");                                 
+                modeTable.addRow(dats); 
+            }
+            
+            this.jtxt_errores.setText("La consulta se ejecutó con normalidad");
+            
         }
         if(errores.equals("WHERE")){
             this.jtxt_errores.setText("Consulta exitosa.");
-            controlSelect.consultaWhere(consul);
+            res = controlSelect.consultaWhere(consul);
+            
+            int tam = 0;
+            tam = res.size();           
+//            System.out.println(res.get(1).getDatos()+" hola dato");   
+//            modeTable = (DefaultTableModel) this.tbl_resultado.getModel();
+            String[] datos;
+            String[] dats = null;
+            datos = res.get(0).getDatos().toString().split(",");
+//            System.out.println(datos[0]+" datos");
+            int cols = 0;
+            
+            cols = res.get(0).getDatos().size()-1;
+            
+            for (int i = 0; i <= cols; i++) {
+                System.out.println(i);
+                modeTable.addColumn(datos[i]);                               
+            }
+            this.tbl_resultado.setModel(modeTable);
+             
+            for (int i = 1; i < tam; i++)             
+            {                    
+                dats = res.get(i).getDatos().toString().split(",");                                 
+                modeTable.addRow(dats); 
+            }         
         }
         if(errores.equals("FULL_INNER_JOIN")){
             this.jtxt_errores.setText("Consulta exitosa.");
@@ -406,6 +481,7 @@ public class frm_consultas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_consultar;
+    private javax.swing.JButton btn_limpiar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
