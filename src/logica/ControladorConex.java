@@ -117,7 +117,7 @@ public class ControladorConex {
                 this.archivo.escribirArchivo(dato);
             }
         } catch (IOException ex) {
-            System.out.println("error creando archivo de metadatos");
+            System.out.println("error creando archivo de datos");
             Logger.getLogger(ControladorConex.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             this.archivo.cerrarArchivo();

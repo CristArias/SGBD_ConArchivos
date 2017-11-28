@@ -115,7 +115,7 @@ public class ControladorSelect {
     */
     public String SintaxisSELECT(String consulta_usuario){
         String errores = "";
-//        System.out.println(consulta_usuario + "hol5s");
+        System.out.println(consulta_usuario + "holssss");
             
             String[] campos = consulta_usuario.split(" ");
             System.out.println(campos[0] + "hol5s");

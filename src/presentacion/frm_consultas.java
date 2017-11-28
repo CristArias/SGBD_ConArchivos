@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import logica.Contr;
 import logica.ControladorConex;
+import logica.ControladorDelete;
 import persistencia.Archivo;
 import persistencia.Dato;
 import persistencia.ModeloJtable;
@@ -211,7 +212,7 @@ public class frm_consultas extends javax.swing.JFrame {
 
     private void btn_consultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_consultarActionPerformed
         try {   
-            consultar();                
+            consultar(); 
              
         } catch (IOException ex) {
             Logger.getLogger(frm_consultas.class.getName()).log(Level.SEVERE, null, ex);
@@ -367,13 +368,28 @@ public class frm_consultas extends javax.swing.JFrame {
     }
 
     public void opcion3delete() {
+        ControladorDelete contrDel = new ControladorDelete();
         String consul = this.txt_consulta.getText().toUpperCase();
         //System.out.println("Aun no implementado Delete");
         String deleteTab = contr.nombreTablaDelete(consul);
         System.out.println(deleteTab);
-
+        ArrayList<Dato> res;
+        
         String cond = contr.condicionWhere(consul);
-        System.out.println(cond);
+        String condSinEsp = cond.trim();
+        
+        String err = "";
+        err = contrDel.SintaxisDELETE(consul);
+        System.out.println(err);
+        if(err.equals(""))
+        {
+            res = contrDel.consultaWhere(consul);
+            System.out.println(res.size()+" tammmmmmm");
+            System.out.println(res.get(0).getDatos()+" valor a eliminar");
+            jtxt_errores.setText("Delete ejecutado correctamente");
+        }else{
+            jtxt_errores.setText(err);
+        }             
     }
     
     public void opcion4Select(){
